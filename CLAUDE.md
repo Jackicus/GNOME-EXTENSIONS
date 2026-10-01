@@ -53,7 +53,9 @@ desktop (`.claude/rules/live-session.md`; the `gnome-ext:nested-shell` skill to 
 Never reload, restart or enable anything in the real session to test a change, never write
 the user's dconf for a test, and never touch another repository's nested shell. The nested
 shell keeps settings of its own and is stopped by the repository's SessionEnd hook if the
-session ends first; stop it yourself when the work is done.
+session ends first; stop it yourself when the work is done. Shots, logs and anything
+else scratch go in the repository's own folder of the scratchpad (`<scratchpad>/<repo>/`):
+sessions and agents running side by side share the scratchpad, and overwrite generic names.
 
 ## Style
 
@@ -133,7 +135,9 @@ skills are on disk, to be read as playbooks.
 ## Working on the kit
 
 The kit goes through the same loop: issue, branch, `scripts/check.sh` (what the kit's CI
-runs), pull request, green CI, squash merge. Then:
+runs), pull request, green CI, squash merge. The kit folder is one checkout every session
+shares, so a kit branch lives in a worktree of its own (`git worktree add`), never by
+switching the folder's branch. Then:
 
 - after a change under `template/` or `scripts/sync.sh`, once it is merged, the kit's own
   `rollout` skill (`.claude/skills/rollout/`, loaded only in a session started here)

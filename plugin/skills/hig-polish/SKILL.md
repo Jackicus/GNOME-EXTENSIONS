@@ -53,6 +53,6 @@ one. A shortcut the extension adds does not take one GNOME uses.
 ## 4. Fix and land
 
 Fix the biggest gap first, `reload`, reshoot the same states and look again. Before and
-after shots go in the pull request description (from the scratchpad; kept shots only via
+after shots go in the pull request description (from the repository's folder in the scratchpad; kept shots only via
 `gnome-ext:screenshots`). `make check`, `stop` + `start` once, then the repository's
 loop. Report what changed, what was left and why.

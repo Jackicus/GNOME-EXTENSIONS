@@ -86,7 +86,7 @@ gh repo view $R --json description,homepageUrl,repositoryTopics
 - The **social preview** (the card a shared link shows) can only be uploaded in the web
   UI: Settings › General › Social preview. Make a 1280×640 PNG with
   `gnome-ext:screenshots` (the hero, cropped or padded to 2:1 on the shell's own
-  background), save it in the scratch directory as `<repository>-social-preview.png` (a
+  background), save it in the repository's folder of the scratch directory as `<repository>-social-preview.png` (a
 name of its own: several repositories' previews may be made in one session) and hand the
 owner its path.
 

@@ -23,7 +23,7 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 │                                  dev.sh, nested.sh, nested_driver.py,
 │                                  dev-extension.js, kit.mk)
 ├── scripts/pull.sh                the kit and the extensions up to date (clones what is missing)
-├── scripts/setup.sh               once per machine: install the plugin
+├── scripts/setup.sh               once per machine: install the plugin, list missing tools
 ├── scripts/sync.sh                copy template/ into the extensions
 ├── scripts/releases.sh            every extension's release state, read-only
 ├── scripts/protect-tags.sh        make an extension's v* tags permanent
@@ -75,7 +75,9 @@ git clone https://github.com/Jackicus/GNOME-EXTENSIONS.git && cd GNOME-EXTENSION
 `setup.sh` registers this folder as the `gnome-extensions` marketplace, installs
 `gnome-ext`, and leaves it off at user level, so it is on in the extensions (their
 settings enable it) and nowhere else. Run it again any time; it changes nothing the
-second time.
+second time. It ends by listing the tools the extensions' scripts use that the machine
+lacks (shared ones in `setup.sh`, each extension's in its `scripts/ext.conf` `EXT_TOOLS`),
+with one `pacman` command; it installs nothing. `scripts/setup.sh --tools` runs only that.
 
 ## Keeping up to date
 
