@@ -114,18 +114,20 @@ once per machine by `scripts/setup.sh`: `gnome-ext:fix-bug`, `gnome-ext:review-p
 `gnome-ext:nested-shell`, `gnome-ext:release`, `gnome-ext:doctor`,
 `gnome-ext:screenshots` (published shots, stand-in data only), `gnome-ext:ego-review`
 (the extensions.gnome.org review, before any upload), `gnome-ext:port-shell-version`,
-`gnome-ext:hig-polish`. Outside this
-workspace (a cloud session, a fresh clone) the plugin is not there; `.claude/kit.sh`
-prints this file and the rules into the session and says where the skills are on disk,
-to be read as playbooks.
+`gnome-ext:hig-polish`, `gnome-ext:readme` (the README skeleton and the GitHub page).
+Outside this workspace (a cloud session, a fresh clone) the plugin is not there;
+`.claude/kit.sh` prints this file and the rules into the session and says where the
+skills are on disk, to be read as playbooks.
 
 ## Working on the kit
 
 The kit goes through the same loop: issue, branch, `scripts/check.sh` (what the kit's CI
 runs), pull request, green CI, squash merge. Then:
 
-- after a change under `template/`, run `scripts/sync.sh` and land the result in each
-  extension through its own pull request; `scripts/sync.sh --check` lists what differs;
+- after a change under `template/` or `scripts/sync.sh`, once it is merged, the kit's own
+  `rollout` skill (`.claude/skills/rollout/`, loaded only in a session started here)
+  lands it in each extension through its own pull request; `scripts/sync.sh --check`
+  lists what differs;
 - after a change under `plugin/`, nothing: the plugin is read from this folder, so the
   next session sees it. Bump `plugin/.claude-plugin/plugin.json`'s version when a skill's
   meaning changes.

@@ -9,12 +9,14 @@ cannot drift between five copies.
 GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── CLAUDE.md                      rules for every extension session (loaded automatically)
 ├── .claude/rules/                 the same, by topic: live-session.md, gjs-st.md
+├── .claude/skills/rollout/        the kit's own skill: land a template change everywhere
 ├── .claude-plugin/marketplace.json
 ├── plugin/                        the gnome-ext plugin: fix-bug, review-pass,
 │                                  nested-shell, release, doctor, screenshots,
-│                                  ego-review, port-shell-version, hig-polish
+│                                  ego-review, port-shell-version, hig-polish, readme
 ├── template/                      files every extension carries (CI, the kit hook, ESLint,
-│                                  the pull request template, settings to merge)
+│                                  the pull request template, the issue forms,
+│                                  CONTRIBUTING.md, settings to merge)
 ├── scripts/setup.sh               once per machine: install the plugin
 ├── scripts/sync.sh                copy template/ into the extensions
 ├── scripts/check.sh               the kit's own check (CI runs it)
@@ -74,7 +76,8 @@ a pull request, a green `kit check`, a squash merge. Then:
 - **`template/`**: `scripts/sync.sh` copies it into every extension (or name some:
   `scripts/sync.sh GNOME-Media-Controls`), merging `.claude/settings.json` rather than
   replacing it; each extension lands the result through its own pull request.
-  `scripts/sync.sh --check` changes nothing and lists what differs.
+  `scripts/sync.sh --check` changes nothing and lists what differs. In a Claude Code
+  session started in this folder, the `rollout` skill does all of that.
 
 ## A new extension
 
