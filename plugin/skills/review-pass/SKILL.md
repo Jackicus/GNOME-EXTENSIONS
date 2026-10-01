@@ -18,8 +18,10 @@ none. A PR number: `gh pr checkout N` first.)
      `query_info`, `file_test` on a path that can be a share), `GLib.spawn_sync`, a loop
      that builds an actor per item owned, work started on a frame that animates;
    - **`disable()` incomplete**: a signal, source, timeout, keybinding, monkey-patch, actor
-     or file monitor that `enable()` makes and `disable()` does not undo, or an undo that
-     can throw and abandon the rest;
+     or file monitor that `enable()` makes and `disable()` does not undo; an undo that
+     can throw for an outside reason (private API, a monkey-patch put back) left unguarded,
+     so it abandons the rest; or the opposite, `try`/`catch` around `destroy()`,
+     `disconnect()` or `GLib.Source.remove()`, or a `_destroyed` flag;
    - **shared-shell hygiene**: an unprefixed GObject type name, CSS class, effect name or
      settings path; a monkey-patch that does not chain, or that is removed while another
      extension's wrapper sits over it;

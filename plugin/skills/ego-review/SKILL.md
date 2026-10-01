@@ -58,10 +58,9 @@ Work on the shipped tree: what `make pack` (Wallpaper FX: `make zip`) puts in
 ## Best practices (fix unless the repository records why not)
 
 - No `try`/`catch` around `destroy()`, `connect()`, `disconnect()`, `abort()` or
-  `GLib.Source.remove()`, and no `_destroyed` flags: destroy and null instead. The
-  kit's "each step of `disable()` guarded" applies to steps that can throw for reasons
-  outside the extension (a private API, a monkey-patch put back, another extension's
-  object), not to these.
+  `GLib.Source.remove()`, and no `_destroyed` flags: destroy and null instead. Only a
+  step that can throw for a reason outside the extension (a private API, a monkey-patch
+  put back, another extension's object) is guarded (`.claude/rules/gjs-st.md`).
 - No optional chaining or type checks on what the targeted versions guarantee.
 - A source's removal sits next to its creation; `enable()` and `disable()` sit together;
   each class cleans up what it made; the entry point stays small.

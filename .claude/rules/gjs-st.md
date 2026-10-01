@@ -44,9 +44,13 @@
 - **A freeze leaves no log.** Where a repository has `make stalls`, it catches one in the
   act. Measure the main loop with `Properties.Get` on `org.gnome.Shell`, never
   `Peer.Ping`, which GDBus answers on its worker thread.
-- **`disable()` undoes everything `enable()` did**, each step on its own and guarded: a
-  step that throws must not abandon the rest, or handlers keep running beside the next
-  enable's. Screen lock disables and unlock enables (`session-modes` `['user']`).
+- **`disable()` undoes everything `enable()` did**: destroy and null, disconnect, remove
+  sources, in plain calls. No `try`/`catch` around `destroy()`, `disconnect()` or
+  `GLib.Source.remove()`, and no `_destroyed` flags (extensions.gnome.org best practice).
+  Guard only a step that can throw for a reason outside the extension (a private shell
+  API reach, a monkey-patch put back, another extension's object), so one moved internal
+  cannot abandon the rest and leave handlers running beside the next enable's. Screen
+  lock disables and unlock enables (`session-modes` `['user']`).
 - **The shell is shared with other extensions.** GObject type names, CSS classes, effect
   names, settings paths, cache and runtime directories and the log prefix are global:
   each carries the extension's prefix. A monkey-patch wraps what it found and calls it;
