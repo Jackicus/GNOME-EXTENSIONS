@@ -34,9 +34,10 @@ The user's desktop is the one they are working in. Everything is tried in a **ne
 shell**: a second, headless GNOME Shell with its own session bus, mirrored live on the
 desktop (`.claude/rules/live-session.md`; the `gnome-ext:nested-shell` skill to drive it).
 Never reload, restart or enable anything in the real session to test a change, never write
-the user's dconf for a test, and never touch another repository's nested shell. Each
-repository's `.claude/settings.json` stops its nested shell when the session ends; stop it
-yourself when the work is done.
+the user's dconf for a test, and never touch another repository's nested shell. A nested
+shell that outlives its command (`./scripts/nested.sh start`) is stopped by the
+repository's SessionEnd hook if the session ends first; stop it yourself when the work is
+done. AI Usage's lives only while its command runs, and it has no such hook.
 
 ## Style
 
@@ -44,6 +45,8 @@ yourself when the work is done.
   every repo: `template/eslint.config.mjs`). No errors, and no new warnings.
 - 4-space indents, `const` and `let`, `console.*` for logging behind the extension's own
   `[Name]` prefix, which `make logs` filters on. The shipped code logs failures only.
+  `make logs` takes no time: a Makefile rule drops arguments (`make logs '5 min ago'`
+  makes a second goal), so a window goes to `./scripts/dev.sh logs '5 min ago'`.
 - Comments describe the code as it is: no phase numbers, review IDs, plans or history.
   History is git's.
 - GObject type names, CSS classes, settings paths, cache and runtime directories are
@@ -91,8 +94,9 @@ extension moves here, in a kit pull request, and leaves the extensions' files.
   repeat it.
 - `.claude/commands/` (`/logs`, `/reload`, `/status`, `/preview`, …): per repo, since each
   names its own log line, its own healthy state and its own data.
-- `.claude/settings.json`: the SessionEnd hook that stops the nested shell, plus the kit's
-  SessionStart hook and plugin, merged in by `scripts/sync.sh`.
+- `.claude/settings.json`: the SessionEnd hook that stops the nested shell (where the
+  nested shell outlives its command), plus the kit's SessionStart hook and plugin, merged
+  in by `scripts/sync.sh`.
 
 ## Skills from the kit
 

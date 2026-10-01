@@ -10,9 +10,11 @@
   "Doesn't exist" from `gnome-extensions info` means exactly that; no reload fixes it.
 - **`make reload` is not optional.** The link puts edits on disk; the shell holds the old
   modules until the disable/enable cycle.
-- **`./scripts/dev-extension.js` stages `lib/` under a checksum of its files**, so an edit
-  makes a new stage and a lock/unlock re-enables into the same module graph. The shipped
-  `extension.js` imports `lib/app.js` once, as an install should.
+- **`./scripts/dev-extension.js` stages a fresh copy of `lib/`**, so an edit reaches the
+  next enable under a URL GJS has not cached. How it names the stage is the repository's
+  (a checksum of the files in most; a new copy per enable in Wallpaper FX) and its
+  CLAUDE.md says so. The shipped `extension.js` imports `lib/app.js` once, as an install
+  should.
 - **GObject type names outlive modules.** A class registered under a fixed name fails the
   second time it is registered ("already registered"); under staging, every enable loads
   `lib/` afresh. Name per-load classes apart, or register once.
@@ -23,6 +25,12 @@
 - **Never hardcode the repo path**, and never derive one from `import.meta.url`: modules
   run from a staging copy under the link and from the install otherwise. Use `this.path`
   / `this.dir`.
+- **`gjs -m -c '…'` fails for any input on gjs 1.88**: `-m` takes the `-c` text for a
+  file name. A one-off module check is a script file run with `gjs -m`.
+- **GObject subclasses follow their parent's constructor style.** `PanelMenu.Button` (and
+  the shell classes still on `_init`) are subclassed with `_init(…)` and
+  `super._init(…)`; `St.BoxLayout` and the other St/Clutter classes with
+  `constructor(…)` and `super(…)`.
 
 ## Living in the compositor
 
@@ -49,6 +57,29 @@
   finds, and an own `connect` breaks every tracked connection.
 - **`captured-event::key` is wider than a key press**: check
   `event.type() === Clutter.EventType.KEY_PRESS` before asking for a key symbol.
+- **Arrow keys never reach the focus manager while a `pushModal` grab holds.** Under a
+  grab, call `global.focus_manager.navigate_from_event(event)` from the grab actor's
+  `key-press-event`, as the shell's popup menus and dialogs do.
+- **`Main.panel.addToStatusArea(role, …)` holds the role until the indicator is
+  destroyed**: a second add under the same role throws. Moving an indicator is a reparent
+  between the panel's boxes; destroying it releases the role.
+- **`Main.layoutManager.addChrome()` takes `trackFullscreen` and `affectsStruts` only** on
+  50 (`affectsInputRegion` is gone): anything else throws `Unrecognized parameter`.
+- **Activating an item in a `PopupMenuSection` closes the whole menu**: the menu that
+  added the item calls `itemActivated`, which closes the top menu, after every
+  `activate` emission. An item that must leave it open overrides `activate()` and does
+  not emit, as the shell's switch item does for Space.
+- **"Is the app grid up?" is `Main.overview.dash.showAppsButton.checked`**, never
+  `appDisplay.visible`, which is true whenever anything sits in the app grid's slot.
+- **A scroll view's `St.Adjustment` is already disposed when the view's `destroy`
+  fires**: disconnecting from it there throws. Disconnect earlier, or with
+  `connectObject` tied to the adjustment.
+- **Hover on many tiles is crossing events, not `track_hover`**: the `hover` pseudo-class
+  restyles the widget and every child under it, on every crossing.
+- **Two writes at once on a GIO stream fail** ("Stream has outstanding operation"): queue
+  them, one `write_bytes_async` after the last finishes.
+- **A dconf database name is a D-Bus object-path element**: letters, digits and
+  underscores only. With a hyphen every write fails and `gsettings set` hangs.
 
 ## St is not the web
 
@@ -70,6 +101,9 @@
   `background-image`; an image-backed widget never gets a `box-shadow` (drawn square).
 - **An icon file must start with `<svg`**: gdk-pixbuf sniffs the opening bytes, so a
   comment before the tag makes it silently not an image. Comments go inside.
+- **An icon's size comes from its own `icon_size` or the theme's, never an ancestor's
+  `font-size`**: text scaled through a font size leaves the icons beside it at the
+  theme's size until each icon's `icon_size` is scaled too.
 
 ## Looking like GNOME
 
@@ -77,10 +111,13 @@
   (`PopupMenu`, the quick settings' `Slider`, `icon-button`, `overview-tile`,
   `app-folder-dialog`, the OSD's placement); draw only what GNOME has no equivalent for.
 - **Type is in em** (1em is the shell's UI font), so Large Text and scaling follow. A px
-  font size, or any px but a hairline border or a shadow, is a bug.
+  font size, or any px but a hairline border or a shadow, is a bug, unless the
+  repository's CLAUDE.md or rules state the exception and what it was measured against
+  (a padding matched to the shell theme's own px).
 - **Colour comes from the accent and the shell's neutrals**: `-st-accent-color`,
   `-st-accent-fg-color`, `st-lighten()`, `st-mix()`, `st-transparentize()`. Never a
   hard-coded hue; menus follow the light/dark preference.
 - **Motion sits beside the shell's**: 100–250 ms, ease-out-quad, through `actor.ease()`,
   which honours the animations switch and the slow-down factor. One module (`anim.js`)
-  holds an extension's durations.
+  holds an extension's durations. A duration outside the range is stated, with its
+  reason, in the repository's CLAUDE.md.

@@ -11,8 +11,8 @@ test does happens in a nested shell or not at all.
   screenshots and the user through the mirror.
 - **Stop it when done**, a failed check included: `./scripts/nested.sh stop` (`make
   nested-stop`) closes the mirror, the shell, its bus and every process it started, and
-  says whether anything survived; read that line. The SessionEnd hook and an idle timeout
-  are backstops for accidents, not the plan.
+  says whether anything survived; read that line. The SessionEnd hook and an idle timeout,
+  where a repository has them, are backstops for accidents, not the plan.
 - **Never touch another repository's nested shell.** Several can run at once, one per
   repository, each with its own Wayland display and `$XDG_RUNTIME_DIR/<name>-nested/` run
   directory. Never stop, kill or `pkill` one but this repository's.

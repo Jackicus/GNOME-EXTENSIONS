@@ -79,9 +79,17 @@ extension, and that the kit lacks, goes in the report for the kit, not here.
   shader compiles, Python tests). It passes locally.
 - It must pass in CI's Arch container with no display and no GPU: anything that needs
   either stays out of `make check` (a separate target), not skipped silently.
+- It never touches the user's own files: a check that imports or runs a scanner (or any
+  module that creates `~/.cache/<name>` or reads `~/.config` at import) runs with `HOME`
+  (and the `XDG_*_HOME` it would use) pointed at a scratch directory, and offline.
 - Packages beyond the template's base (`./.github/ci-packages`, one Arch package per line:
   `glslang`, `python-gobject`, `libadwaita`, …) are what `make check` needs and the base
   lacks.
+- The repository's `.gitignore` ignores none of the files the sync writes:
+  `git check-ignore -v --no-index .claude/settings.json .claude/kit.sh .github/workflows/ci.yml`
+  prints nothing (a repository that ignored all of `.claude/` would never commit them;
+  ignore `.claude/worktrees/` or `.claude/settings.local.json` instead). `sync.sh` refuses
+  such a repository.
 - Run the kit's `scripts/sync.sh <this repository>`. It copies
   `.github/workflows/ci.yml`, `.github/pull_request_template.md`, `.claude/kit.sh` and
   `eslint.config.mjs`, and merges the kit's hook and plugin into `.claude/settings.json`,
