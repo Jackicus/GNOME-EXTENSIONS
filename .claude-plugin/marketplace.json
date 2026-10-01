@@ -1,0 +1,16 @@
+{
+  "name": "gnome-extensions",
+  "owner": {
+    "name": "Jackicus"
+  },
+  "metadata": {
+    "description": "Claude Code skills shared by Jackicus's GNOME Shell extensions"
+  },
+  "plugins": [
+    {
+      "name": "gnome-ext",
+      "source": "./plugin",
+      "description": "Fix a bug, review a branch, drive the nested shell, release, and audit an extension against the kit"
+    }
+  ]
+}

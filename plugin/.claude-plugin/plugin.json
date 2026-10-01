@@ -1,0 +1,10 @@
+{
+  "name": "gnome-ext",
+  "version": "0.1.0",
+  "description": "Skills shared by the GNOME Shell extensions beside the GNOME-EXTENSIONS kit: fix-bug, review-pass, nested-shell, release, doctor",
+  "author": {
+    "name": "Jackicus"
+  },
+  "repository": "https://github.com/Jackicus/GNOME-EXTENSIONS",
+  "license": "GPL-2.0-or-later"
+}
