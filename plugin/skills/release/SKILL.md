@@ -14,6 +14,8 @@ it is pushed and anyone has installed the zip, it is never moved or deleted; cut
 version instead.
 
 1. `main` is green in CI, the working tree is clean and on `main`, pulled.
+   **Run `gnome-ext:ego-review` first** and stop on any blocker it leaves: a release that
+   extensions.gnome.org would reject is not cut. Report its findings with the hand-over.
 2. **The version.** extensions.gnome.org numbers uploads itself (`version`, an integer);
    never set `version` in `metadata.json`. What is set is `version-name`, the one people
    read: **patch** (1.0 → 1.0.1) for fixes alone, **minor** (→ 1.1) when a feature was
