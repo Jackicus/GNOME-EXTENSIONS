@@ -1,0 +1,48 @@
+---
+name: rollout
+description: Land a merged kit change to template/ or scripts/sync.sh in every extension beside the kit - sync.sh into each, review, make check, then each extension's own issue, branch, pull request, green CI and squash merge - until sync.sh --check is clean for all. Use after a kit pull request that changes what the extensions carry has been merged.
+argument-hint: "[extension directories; default every extension beside the kit]"
+---
+
+Roll out to: $ARGUMENTS (nothing given: every extension `scripts/sync.sh` finds)
+
+This runs in a session started in the kit folder; it is the kit's own skill, not the
+plugin's. The extensions' `main` is protected, so a template change reaches them only as
+one pull request each, through the loop their CLAUDE.md describes.
+
+## Before
+
+- The kit change is **merged**, and the kit checkout is on `main`, pulled. Never roll out
+  from a branch: the extensions would carry files that `main` does not have.
+- `scripts/sync.sh --check` lists what differs per extension. An extension already up to
+  date needs nothing. One that `sync.sh` refuses (its `.gitignore` ignores a synced file)
+  gets that fixed in the same pull request.
+- Every extension's checkout is clean and on its `main`, pulled. One that is not (work in
+  progress, another session's branch) is left alone and named in the report.
+
+## Each extension
+
+1. `gh issue create`: "Carry the kit's <what changed>", linking the kit pull request.
+2. A branch `chore/kit-sync-<short-name>` from a fresh `main`.
+3. `scripts/sync.sh <extension>` from the kit. Read the whole diff
+   (`git -C <extension> diff`, and `git -C <extension> status` for new files): only the
+   synced files change, and each change is the kit's. A file the extension had changed
+   by hand is a finding for the report, not something to keep or drop silently.
+4. Whatever the change needs that `sync.sh` cannot do: a new package in
+   `./.github/ci-packages`, a line in the extension's CLAUDE.md that the template now
+   contradicts. Nothing else goes in: a rollout pull request never carries other work.
+5. `make check` in the extension.
+6. Commit (subject says what is now true: "CI caches the npm modules, as the kit's
+   template does now"), push, open the pull request with "Fixes #N" and a link to the kit
+   pull request, wait for the `make check` job to go green, then
+   `gh pr merge --squash --delete-branch`, check `main`'s run and pull `main`.
+
+With more than two extensions, give each one to a subagent with these steps and the kit
+pull request's link; they touch separate repositories, so they run in parallel. Two
+agents never work in the same extension at once.
+
+## After
+
+- `scripts/sync.sh --check` is clean for every extension (`up to date` each).
+- Report: the kit pull request, one line per extension (its pull request and CI, or why it
+  was skipped), and anything an extension had changed by hand in a synced file.

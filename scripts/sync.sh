@@ -8,6 +8,8 @@
 #
 #   template/.github/workflows/ci.yml          copied
 #   template/.github/pull_request_template.md  copied
+#   template/.github/ISSUE_TEMPLATE/*.yml      copied (bug, feature, config)
+#   template/CONTRIBUTING.md                   copied
 #   template/.claude/kit.sh                    copied, executable
 #   template/eslint.config.mjs                 copied
 #   template/.claude/settings.json             merged into the repository's own: the
@@ -32,7 +34,7 @@ repos=()
 for arg in "$@"; do
     case $arg in
         --check) check=1 ;;
-        -h | --help) sed -n '2,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h | --help) sed -n '2,/^$/p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
         -*) echo "sync.sh: unknown option $arg" >&2; exit 2 ;;
         *) repos+=("$arg") ;;
     esac
@@ -48,6 +50,10 @@ fi
 copies=(
     .github/workflows/ci.yml
     .github/pull_request_template.md
+    .github/ISSUE_TEMPLATE/bug.yml
+    .github/ISSUE_TEMPLATE/feature.yml
+    .github/ISSUE_TEMPLATE/config.yml
+    CONTRIBUTING.md
     .claude/kit.sh
     eslint.config.mjs
 )

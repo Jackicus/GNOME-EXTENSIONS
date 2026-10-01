@@ -5,9 +5,9 @@
 #
 # - shellcheck over the kit's scripts and the hook each extension gets;
 # - every .json file parses;
-# - every backticked kit path in CLAUDE.md, .claude/rules/ and the plugin's skills exists
-#   (one starting template/, plugin/, .claude-plugin/, .claude/rules/, scripts/ or
-#   .github/; a .github/ path may be the template's).
+# - every backticked kit path in CLAUDE.md, .claude/rules/, the kit's own skills and the
+#   plugin's skills exists (one starting template/, plugin/, .claude-plugin/,
+#   .claude/rules/, scripts/ or .github/; a .github/ path may be the template's).
 #
 # Prints `check: ok` when all pass.
 
@@ -34,7 +34,8 @@ done < <(find . -name '*.json' -not -path './.git/*' -not -path './GNOME-*' -pri
 python3 - <<'EOF' || fail=1
 import glob, os, re, sys
 
-docs = ['CLAUDE.md', *glob.glob('.claude/rules/*.md'), *glob.glob('plugin/skills/*/SKILL.md')]
+docs = ['CLAUDE.md', *glob.glob('.claude/rules/*.md'), *glob.glob('.claude/skills/*/SKILL.md'),
+        *glob.glob('plugin/skills/*/SKILL.md')]
 prefixes = ('template/', 'plugin/', '.claude-plugin/', '.claude/rules/', 'scripts/', '.github/')
 missing = []
 for doc in docs:
