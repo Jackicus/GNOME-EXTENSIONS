@@ -3,7 +3,9 @@
 This folder is the **kit**: shared rules, skills and templates for the GNOME Shell extensions
 checked out beside it, one git repository each (`GNOME-AI-Usage`, `GNOME-Games-Library`,
 `GNOME-Media-Controls`, `GNOME-Video-Library`, `GNOME-Wallpaper-FX`). The kit is a repository
-of its own (Jackicus/GNOME-EXTENSIONS) that ignores them. A session started in an extension
+of its own (Jackicus/GNOME-EXTENSIONS) that ignores them and lists them in `extensions.json`;
+`scripts/pull.sh` clones and fast-forwards them, and every session starts with the kit and
+its own repository pulled (`.claude/kit.sh`). A session started in an extension
 loads this file and `.claude/rules/` from here, then the extension's own CLAUDE.md, which
 says what that extension is and what is true only of it. When the two disagree, the
 extension's file is the more specific and wins; fix whichever is wrong.
@@ -114,7 +116,8 @@ once per machine by `scripts/setup.sh`: `gnome-ext:fix-bug`, `gnome-ext:review-p
 `gnome-ext:nested-shell`, `gnome-ext:release`, `gnome-ext:doctor`,
 `gnome-ext:screenshots` (published shots, stand-in data only), `gnome-ext:ego-review`
 (the extensions.gnome.org review, before any upload), `gnome-ext:port-shell-version`,
-`gnome-ext:hig-polish`, `gnome-ext:readme` (the README skeleton and the GitHub page).
+`gnome-ext:hig-polish`, `gnome-ext:readme` (the README skeleton and the GitHub page),
+`gnome-ext:pull` (the kit and the extensions up to date, and why one was left alone).
 Outside this workspace (a cloud session, a fresh clone) the plugin is not there;
 `.claude/kit.sh` prints this file and the rules into the session and says where the
 skills are on disk, to be read as playbooks.

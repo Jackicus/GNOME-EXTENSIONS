@@ -3,8 +3,9 @@
 #
 #   scripts/sync.sh [--check] [REPO...]
 #
-# REPO is a directory beside the kit (GNOME-Media-Controls) or a path; by default every
-# directory beside the kit that is a git repository with a src/metadata.json. For each:
+# REPO is an extension's directory name or alias from extensions.json (GNOME-Media-Controls,
+# media) or a path; by default every extension extensions.json lists that is checked out
+# beside the kit (scripts/pull.sh clones the rest). For each:
 #
 #   template/.github/workflows/ci.yml          copied
 #   template/.github/pull_request_template.md  copied
@@ -40,10 +41,25 @@ for arg in "$@"; do
     esac
 done
 
+# NAME ALIAS, one extension per line.
+manifest=$(python3 -c '
+import json, sys
+for e in json.load(open(sys.argv[1]))["extensions"]:
+    print(e["name"], e["alias"])
+' "$kit/extensions.json")
+
 if [ ${#repos[@]} -eq 0 ]; then
-    for d in "$kit"/*/; do
-        d=${d%/}
-        [ -d "$d/.git" ] && [ -f "$d/src/metadata.json" ] && repos+=("$d")
+    while read -r name _; do
+        if [ -d "$kit/$name/.git" ]; then
+            repos+=("$kit/$name")
+        else
+            echo "$name: not checked out beside the kit (scripts/pull.sh $name clones it)"
+        fi
+    done <<< "$manifest"
+else
+    for i in "${!repos[@]}"; do
+        alias_name=$(awk -v a="${repos[$i]}" '$2 == a {print $1}' <<< "$manifest")
+        [ -n "$alias_name" ] && repos[i]=$alias_name
     done
 fi
 
