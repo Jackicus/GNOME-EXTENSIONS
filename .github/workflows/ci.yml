@@ -1,0 +1,31 @@
+# Runs scripts/check.sh (shellcheck, JSON, and the paths the docs name) on every push to
+# main and every pull request. The job's name, `kit check`, is the status check main's
+# protection requires.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: kit check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Run scripts/check.sh
+        run: |
+          shellcheck --version | head -2
+          scripts/check.sh
