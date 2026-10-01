@@ -11,6 +11,7 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── extensions.json                the extensions: directory, GitHub repository, alias
 ├── .claude/rules/                 the same, by topic: live-session.md, gjs-st.md
 ├── .claude/skills/rollout/        the kit's own skill: land a template change everywhere
+├── .claude/skills/new-extension/  the kit's own skill: start a new extension
 ├── .claude-plugin/marketplace.json
 ├── plugin/                        the gnome-ext plugin: fix-bug, review-pass,
 │                                  nested-shell, release, doctor, screenshots,
@@ -21,12 +22,14 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 │                                  the pull request template, the issue forms,
 │                                  CONTRIBUTING.md, settings to merge, and scripts/:
 │                                  dev.sh, nested.sh, nested_driver.py,
-│                                  dev-extension.js, kit.mk)
+│                                  dev-extension.js, kit.mk; skeleton/, a new
+│                                  extension's starting point)
 ├── scripts/pull.sh                the kit and the extensions up to date (clones what is missing)
 ├── scripts/setup.sh               once per machine: install the plugin, list missing tools
 ├── scripts/sync.sh                copy template/ into the extensions
 ├── scripts/releases.sh            every extension's release state, read-only
 ├── scripts/protect-tags.sh        make an extension's v* tags permanent
+├── scripts/new-extension.sh       scaffold a new extension from template/skeleton/
 ├── scripts/check.sh               the kit's own check (CI runs it)
 ├── GNOME-AI-Usage/                an extension, its own repository (ignored here)
 ├── GNOME-Games-Library/           …
@@ -122,10 +125,21 @@ a pull request, a green `kit check`, a squash merge. Then:
 
 ## A new extension
 
-Add it to `extensions.json` (a kit pull request), create its repository inside this
-folder, then `scripts/sync.sh <name>`, write its `scripts/ext.conf` and a Makefile that
-includes `scripts/kit.mk`, add the pointer line to the top of its `CLAUDE.md`, and run the
-`gnome-ext:doctor` skill in it: that walks the rest (CI, settings, protection).
+In a Claude Code session started in this folder, `/new-extension NAME | SLUG |
+description` does it all (`.claude/skills/new-extension/`). By hand:
+
+1. `scripts/new-extension.sh "Clipboard Peek" clipboard-peek "One sentence."` makes
+   `GNOME-Clipboard-Peek/` beside the kit from `template/skeleton/`: a working extension
+   (a top-bar icon behind one setting, its preferences and schema, `lib/app.js` and
+   `lib/gtype.js` as every extension has them, `scripts/ext.conf`, a Makefile on
+   `scripts/kit.mk`, CLAUDE.md with the pointer line, README, LICENSE), synced, with
+   `package-lock.json`, in a fresh git repository with nothing committed.
+2. `make check`, then see it ACTIVE in `./scripts/nested.sh start --clean --headless`.
+3. `gh repo create Jackicus/GNOME-Clipboard-Peek --public --source . --push` with the
+   first commit (the only direct push it takes), topics, squash-only merges.
+4. Once CI is green on `main`: protect `main` (required check `make check`, as
+   `gnome-ext:doctor` sets it) and run `scripts/protect-tags.sh Jackicus/GNOME-Clipboard-Peek`.
+5. Add it to `extensions.json` in a kit pull request.
 
 ## The development scripts
 

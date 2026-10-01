@@ -80,7 +80,7 @@ trap 'rm -rf "$out"' EXIT
 update() {
     local dir=$1 label=$2 repo=$3
     local result=$out/$label
-    if [ ! -d "$dir/.git" ]; then
+    if [ ! -e "$dir/.git" ]; then
         if [ -z "$repo" ]; then
             printf 'failed\tnot a git checkout\n' > "$result"
         elif err=$(timeout 120 git clone -q "https://github.com/$repo.git" "$dir" 2>&1); then

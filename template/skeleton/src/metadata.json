@@ -1,0 +1,9 @@
+{
+  "uuid": "@SLUG@@jackicus",
+  "name": "@NAME@",
+  "description": "@DESCRIPTION@",
+  "settings-schema": "org.gnome.shell.extensions.@SLUG@",
+  "shell-version": [ "50" ],
+  "url": "https://github.com/Jackicus/@REPO@",
+  "version-name": "0.1"
+}

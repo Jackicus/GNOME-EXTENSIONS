@@ -143,6 +143,8 @@ switching the folder's branch. Then:
   `rollout` skill (`.claude/skills/rollout/`, loaded only in a session started here)
   lands it in each extension through its own pull request; `scripts/sync.sh --check`
   lists what differs;
+- a new extension starts with the kit's own `new-extension` skill
+  (`scripts/new-extension.sh` over `template/skeleton/`), never by copying a sibling;
 - after a change under `plugin/`, nothing: the plugin is read from this folder, so the
   next session sees it. Bump `plugin/.claude-plugin/plugin.json`'s version when a skill's
   meaning changes.
