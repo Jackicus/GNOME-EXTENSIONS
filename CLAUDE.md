@@ -117,7 +117,10 @@ once per machine by `scripts/setup.sh`: `gnome-ext:fix-bug`, `gnome-ext:review-p
 `gnome-ext:screenshots` (published shots, stand-in data only), `gnome-ext:ego-review`
 (the extensions.gnome.org review, before any upload), `gnome-ext:port-shell-version`,
 `gnome-ext:hig-polish`, `gnome-ext:readme` (the README skeleton and the GitHub page),
-`gnome-ext:pull` (the kit and the extensions up to date, and why one was left alone).
+`gnome-ext:pull` (the kit and the extensions up to date, and why one was left alone),
+`gnome-ext:releases` (what each has released, and what is waiting).
+A release is a pushed `v*` tag: each extension's `Release` workflow builds the zip and the
+GitHub release, whose notes are the changelog. Release tags are protected and never move.
 Outside this workspace (a cloud session, a fresh clone) the plugin is not there;
 `.claude/kit.sh` prints this file and the rules into the session and says where the
 skills are on disk, to be read as playbooks.

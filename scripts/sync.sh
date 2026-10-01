@@ -8,6 +8,7 @@
 # beside the kit (scripts/pull.sh clones the rest). For each:
 #
 #   template/.github/workflows/ci.yml          copied
+#   template/.github/workflows/release.yml     copied
 #   template/.github/pull_request_template.md  copied
 #   template/.github/ISSUE_TEMPLATE/*.yml      copied (bug, feature, config)
 #   template/CONTRIBUTING.md                   copied
@@ -65,6 +66,7 @@ fi
 
 copies=(
     .github/workflows/ci.yml
+    .github/workflows/release.yml
     .github/pull_request_template.md
     .github/ISSUE_TEMPLATE/bug.yml
     .github/ISSUE_TEMPLATE/feature.yml

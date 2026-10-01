@@ -1,44 +1,67 @@
 ---
 name: release
-description: Release a GNOME Shell extension - set version-name in metadata.json, check, pack the extensions.gnome.org zip, tag, and publish a GitHub release with the zip attached, then hand the zip to the owner for the extensions.gnome.org upload. Only when the owner has said to release.
+description: Release one or more GNOME Shell extensions - extensions.gnome.org review, the version, a release pull request setting version-name, then a v* tag on the merged main that the Release workflow turns into a GitHub release with the zip - and hand the zip to the owner for the extensions.gnome.org upload. Only when the owner has said to release.
 disable-model-invocation: true
-argument-hint: "[version-name, e.g. 1.1; or nothing to propose one]"
+argument-hint: "[names or aliases | all] [version-name, e.g. 1.1; or nothing to propose one]"
 ---
 
 Release: $ARGUMENTS
 
-An agent carries a release out end to end once the owner has said to release, including
-the tag and the GitHub release. The upload to extensions.gnome.org is the owner's: it needs
-their account there, and its review can take days. The tag is the irreversible step: once
-it is pushed and anyone has installed the zip, it is never moved or deleted; cut a new
-version instead.
+A release is a pushed tag. The extension's `Release` workflow (`.github/workflows/release.yml`,
+from the kit) checks the tag against `version-name`, runs `make check`, packs the zip with
+`./scripts/dev.sh pack` and publishes the GitHub release with notes from the merged pull
+requests. Nothing is packed or uploaded by hand. The GitHub releases are the changelog.
 
-1. `main` is green in CI, the working tree is clean and on `main`, pulled.
-   **Run `gnome-ext:ego-review` first** and stop on any blocker it leaves: a release that
-   extensions.gnome.org would reject is not cut. Report its findings with the hand-over.
-2. **The version.** extensions.gnome.org numbers uploads itself (`version`, an integer);
-   never set `version` in `metadata.json`. What is set is `version-name`, the one people
-   read: **patch** (1.0 → 1.0.1) for fixes alone, **minor** (→ 1.1) when a feature was
-   added, **major** (→ 2.0) for a break. List the commits since the last tag
-   (`git log --oneline $(git describe --tags --abbrev=0 2>/dev/null)..` or all of them for
-   the first release) and propose the number if none was given.
+**The tag is irreversible.** Release tags are protected (`scripts/protect-tags.sh`): once
+pushed, a `v*` tag cannot be moved or deleted, by anyone. A mistake is fixed by the next
+version, never by retagging. The upload to extensions.gnome.org is the owner's: it needs
+their account there, and its review can take days.
+
+## First, for all of them
+
+Run `gnome-ext:releases` for the extensions named (`all`: every one). Stop for an extension
+whose `CI` is not green, whose `release run` says `no workflow` (it does not carry
+`release.yml` yet: the kit's `rollout` skill brings it, then `scripts/protect-tags.sh`), or
+that has nothing unreleased. Show the owner the table and the proposed versions.
+
+## Each extension, one at a time
+
+Several extensions are released one after another, each finished before the next starts;
+in parallel subagents only when the owner asks for it.
+
+1. `main` checked out, clean and pulled. **Run `gnome-ext:ego-review`** and stop on any
+   blocker it leaves: a release that extensions.gnome.org would reject is not cut.
+2. **The version.** `version-name` is what people read; extensions.gnome.org numbers
+   uploads itself (`version`, never set in `metadata.json`). It may hold only letters,
+   digits, dots and spaces, at most 16. Take the one given, else `releases.sh`'s
+   **next** (patch for fixes alone, minor when a feature was added, major for a break; the
+   first release keeps the current version-name), and **confirm it with the owner** unless
+   they gave it. A prerelease keeps the version-name and adds a suffix only to the tag
+   (`v1.1-beta.1` releases version-name `1.1` as a prerelease).
 3. **Shell versions.** `shell-version` lists only versions the extension has been booted
-   on. Do not add one here that has not been.
-4. On a branch `release/<version-name>`: set `version-name` in `src/metadata.json`; update
-   the README or `docs/` where they name the version or show screenshots that changed
-   (retake those with `gnome-ext:nested-shell` under `--clean`). `make check`.
-5. Pack: `./scripts/dev.sh pack` (Wallpaper FX: `make zip`). It writes
-   `dist/<uuid>.shell-extension.zip`, after `glib-compile-schemas --strict --dry-run`.
-   List the zip (`unzip -l`) and check it holds `src/`'s files and `LICENSE` and nothing
-   else: no `node_modules`, no `.claude`, no compiled schema the shell would compile itself,
-   no development entry point.
-6. Pull request "Release <version-name>", CI green, squash merge, then on the merged `main`:
-   `git tag -a v<version-name> -m "<Name> <version-name>"` and `git push origin
-   v<version-name>`.
-7. Pack again from the tagged `main` and `gh release create v<version-name>
-   dist/<uuid>.shell-extension.zip --title "<Name> <version-name>" --notes "…"`: a short
-   paragraph and a list of what changed for users, from the commits. **This is the
-   release.**
-8. Hand over: the absolute path of the zip, the GitHub release URL, and the upload step
-   for the owner (https://extensions.gnome.org/upload/, signed in as the extension's
-   owner). If `docs/publishing.md` lists review-guideline checks, say which were walked.
+   on; a release never adds one that has not been (`gnome-ext:port-shell-version`).
+4. A branch `release/<version-name>`: set `version-name` in `src/metadata.json`; update
+   the README or `docs/` where they name the version; retake screenshots only if what
+   they show changed (`gnome-ext:screenshots`). `make check`. Pull request
+   "Release <version-name>", CI green, `gh pr merge --squash --delete-branch`, then
+   `git checkout main && git pull --ff-only`.
+5. Tag the merged `main` and push the tag:
+   `git tag -a v<version-name> -m "<Name> <version-name>"` and
+   `git push origin v<version-name>`.
+6. Watch it: `gh run list -w Release -L 1` for the run, then `gh run watch <id>
+   --exit-status`. On failure, read the log (`gh run view <id> --log-failed`); fix the
+   cause through a pull request and re-run the workflow for the same tag
+   (`gh workflow run release.yml -f tag=v<version-name>`). A wrong `version-name` in the
+   tagged commit cannot be fixed under that tag: release the next version.
+7. Verify: `gh release view v<version-name>` shows the notes and one
+   `<uuid>.shell-extension.zip`; `gh release download v<version-name> -D <scratch>` and
+   `unzip -l` it: `metadata.json` with that version-name, the files `src/` ships, nothing
+   else.
+8. Hand over: the release URL, the zip's local path from step 7, the `gnome-ext:ego-review`
+   findings that were not blockers, and the upload step for the owner
+   (https://extensions.gnome.org/upload/, signed in as the extension's owner).
+
+## After
+
+`gnome-ext:releases` again: each released extension shows its new tag, `0` unreleased and
+a successful release run.

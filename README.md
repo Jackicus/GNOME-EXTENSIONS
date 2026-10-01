@@ -15,13 +15,16 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── plugin/                        the gnome-ext plugin: fix-bug, review-pass,
 │                                  nested-shell, release, doctor, screenshots,
 │                                  ego-review, port-shell-version, hig-polish, readme,
-│                                  pull
-├── template/                      files every extension carries (CI, the kit hook, ESLint,
+│                                  pull, releases
+├── template/                      files every extension carries (CI, the release workflow,
+│                                  the kit hook, ESLint,
 │                                  the pull request template, the issue forms,
 │                                  CONTRIBUTING.md, settings to merge)
 ├── scripts/pull.sh                the kit and the extensions up to date (clones what is missing)
 ├── scripts/setup.sh               once per machine: install the plugin
 ├── scripts/sync.sh                copy template/ into the extensions
+├── scripts/releases.sh            every extension's release state, read-only
+├── scripts/protect-tags.sh        make an extension's v* tags permanent
 ├── scripts/check.sh               the kit's own check (CI runs it)
 ├── GNOME-AI-Usage/                an extension, its own repository (ignored here)
 ├── GNOME-Games-Library/           …
@@ -82,6 +85,23 @@ summary line. A local branch whose remote is gone, because its pull request was 
 is named, never deleted. `--quiet` prints only what changed and what was left. The
 `gnome-ext:pull` skill runs it from any session and offers the fix for each repository it
 left alone.
+
+## Releases
+
+A release is a pushed tag. In an extension, `git tag -a v1.1 -m "Name 1.1"` on the merged
+`main` and `git push origin v1.1`: its `Release` workflow (`template/.github/workflows/release.yml`)
+checks the tag against `version-name` in `src/metadata.json`, runs `make check`, packs the
+zip with `./scripts/dev.sh pack`, and publishes the GitHub release with the zip and notes
+listing the pull requests merged since the last release (`feat/` as Added, `fix/` as
+Fixed). A tag with a suffix (`v1.1-beta.1`) is a prerelease. The GitHub releases are the
+changelog. Uploading the zip to extensions.gnome.org is the owner's.
+
+Tags are permanent: `scripts/protect-tags.sh` gives each extension a ruleset that refuses
+moving or deleting a `v*` tag, for everyone. A wrong release is followed by the next
+version, never retagged. `scripts/releases.sh` (the `gnome-ext:releases` skill) shows every
+extension's version, last tag, unreleased pull requests, CI, last release run and
+extensions.gnome.org version, and proposes the next version; `gnome-ext:release` cuts one,
+only when the owner says so.
 
 ## Changing the kit
 

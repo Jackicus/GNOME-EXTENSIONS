@@ -45,5 +45,9 @@ agents never work in the same extension at once.
 ## After
 
 - `scripts/sync.sh --check` is clean for every extension (`up to date` each).
+- When the rollout brought `.github/workflows/release.yml` to an extension for the first
+  time, run `scripts/protect-tags.sh <extension>` once its pull request has merged, so its
+  release tags can never be moved or deleted; `scripts/releases.sh` then shows its
+  `release run` as `never run` rather than `no workflow`.
 - Report: the kit pull request, one line per extension (its pull request and CI, or why it
   was skipped), and anything an extension had changed by hand in a synced file.
