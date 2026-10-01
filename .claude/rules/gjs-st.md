@@ -70,12 +70,16 @@
   `activate` emission. An item that must leave it open overrides `activate()` and does
   not emit, as the shell's switch item does for Space.
 - **"Is the app grid up?" is `Main.overview.dash.showAppsButton.checked`**, never
-  `appDisplay.visible`, which is true whenever anything sits in the app grid's slot.
+  `appDisplay.visible`: the shell holds the app display visible for the whole slide down
+  to the window picker and does not update it once the transition is dropped. The
+  button is checked as the grid opens and cleared on every way out.
 - **A scroll view's `St.Adjustment` is already disposed when the view's `destroy`
-  fires**: disconnecting from it there throws. Disconnect earlier, or with
-  `connectObject` tied to the adjustment.
+  fires**: disconnecting from it there throws. Its handlers die with it; take back only
+  what is not the adjustment's (an idle source).
 - **Hover on many tiles is crossing events, not `track_hover`**: the `hover` pseudo-class
-  restyles the widget and every child under it, on every crossing.
+  restyles the widget and every child under it, on every enter and leave. Only a widget
+  that paints from `:hover` tracks it, and no rule keys a descendant off a parent's
+  `:hover`.
 - **Two writes at once on a GIO stream fail** ("Stream has outstanding operation"): queue
   them, one `write_bytes_async` after the last finishes.
 - **A dconf database name is a D-Bus object-path element**: letters, digits and
