@@ -17,7 +17,8 @@
 #
 # and its CLAUDE.md is checked for the kit pointer line (template/CLAUDE.pointer.md),
 # which is written by hand. Nothing is committed: each repository lands the result
-# through its own pull request.
+# through its own pull request. A repository whose .gitignore ignores any of these files
+# is refused, since the synced copy would never be committed.
 #
 # --check changes nothing, lists what differs, and exits 1 if anything does.
 
@@ -89,6 +90,17 @@ for repo in "${repos[@]}"; do
     fi
     name=$(basename "$repo")
     changed=()
+
+    # A synced file the repository's .gitignore ignores would never be committed.
+    ignored=()
+    for f in "${copies[@]}" .claude/settings.json; do
+        git -C "$repo" check-ignore -q --no-index "$f" && ignored+=("$f")
+    done
+    if [ ${#ignored[@]} -ne 0 ]; then
+        echo "$name: .gitignore ignores ${ignored[*]}: un-ignore them (ignore .claude/worktrees/ or .claude/settings.local.json instead); not synced" >&2
+        status=1
+        continue
+    fi
 
     for f in "${copies[@]}"; do
         if ! cmp -s "$template/$f" "$repo/$f"; then
