@@ -11,7 +11,8 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── .claude/rules/                 the same, by topic: live-session.md, gjs-st.md
 ├── .claude-plugin/marketplace.json
 ├── plugin/                        the gnome-ext plugin: fix-bug, review-pass,
-│                                  nested-shell, release, doctor
+│                                  nested-shell, release, doctor, screenshots,
+│                                  ego-review, port-shell-version, hig-polish
 ├── template/                      files every extension carries (CI, the kit hook, ESLint,
 │                                  the pull request template, settings to merge)
 ├── scripts/setup.sh               once per machine: install the plugin

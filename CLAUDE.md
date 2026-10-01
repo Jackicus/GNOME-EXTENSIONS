@@ -111,7 +111,10 @@ extension moves here, in a kit pull request, and leaves the extensions' files.
 
 The `gnome-ext` plugin (`plugin/`) is enabled in each extension's settings and installed
 once per machine by `scripts/setup.sh`: `gnome-ext:fix-bug`, `gnome-ext:review-pass`,
-`gnome-ext:nested-shell`, `gnome-ext:release`, `gnome-ext:doctor`. Outside this
+`gnome-ext:nested-shell`, `gnome-ext:release`, `gnome-ext:doctor`,
+`gnome-ext:screenshots` (published shots, stand-in data only), `gnome-ext:ego-review`
+(the extensions.gnome.org review, before any upload), `gnome-ext:port-shell-version`,
+`gnome-ext:hig-polish`. Outside this
 workspace (a cloud session, a fresh clone) the plugin is not there; `.claude/kit.sh`
 prints this file and the rules into the session and says where the skills are on disk,
 to be read as playbooks.
