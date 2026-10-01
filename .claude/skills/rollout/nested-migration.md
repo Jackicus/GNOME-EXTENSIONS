@@ -26,6 +26,9 @@ steps; this is step 4 for that rollout.
   NESTED_STRAYS=("$REPO_DIR/scripts/fakepad.py")
   # Stand-in commands overlaid on /usr/bin under 'start --stand-in'.
   EXT_STAND_IN_BINS=()
+  # Development tools this extension's scripts use beyond the kit's, CHECK|PACKAGE|WHAT FOR
+  # (CHECK is cmd:NAME or py:MODULE); the kit's 'scripts/setup.sh --tools' lists the missing.
+  EXT_TOOLS=("cmd:vlc|vlc|player" "cmd:ffmpeg|ffmpeg|the test video" "py:evdev|python-evdev|fakepad.py")
   ```
 
   `EXT_SLUG` defaults to the UUID before `@` (run directory, Wayland display, staging
@@ -37,8 +40,10 @@ steps; this is step 4 for that rollout.
   `#   ./scripts/dev.sh NAME ...`, which `help` prints. A `cmd_` named like a shared one
   replaces it.
 - **`./scripts/nested.d/<name>.sh`**: the same for `nested.sh`, plus the hooks
-  `nested_stand_in HOME STAGE` (put stand-in data in HOME; STAGE is the staged copy of
-  `src/`, for swapping a module), `nested_started`, `nested_stopping`, `nested_status`.
+  `nested_stand_in HOME STAGE` (put stand-in data in HOME, once per start),
+  `nested_stand_in_stage STAGE` (adjust the staged copy of `src/`, e.g. swap a module;
+  runs at every stage, `reload` included), `nested_started`, `nested_stopping`,
+  `nested_status`.
   Inside, the shared functions are there to call: `nested_env`, `config_dir`, `cmd_start`,
   `cmd_do`, `require_running`, `info`/`ok`/`warn`/`die`, `$RUN_DIR`, `$REPO_DIR`.
 - **The Makefile**: `include scripts/kit.mk`, then only the extension's own targets.
@@ -74,8 +79,8 @@ memory, and keep their comments.
   `schema`), `EXT_STAND_IN_BINS=(claude agy)`, `providers` in `dev.d` (real logins and the
   network: the user's to run). Its nested shell becomes the shared long-lived one
   (`./scripts/nested.sh start|stop`; `dev.sh nested [--window|--keep]` goes). `nested.d`:
-  `nested_stand_in` writes the stand-in logins and copies `scripts/stand-in-http.js` over
-  `"$2/lib/http.js"`; `cmd_shots [--light]` is the old `take_shots` over
+  `nested_stand_in` writes the stand-in logins and `nested_stand_in_stage` copies
+  `scripts/stand-in-http.js` over `"$1/lib/http.js"`; `cmd_shots [--light]` is the old `take_shots` over
   `start --stand-in --headless` (light: `run gsettings set org.gnome.desktop.interface
   color-scheme prefer-light`), then `stop`. The SessionEnd hook arrives with the sync.
   Re-measure the click coordinates if the shots move.

@@ -11,9 +11,10 @@
 - **`make reload` is not optional.** The link puts edits on disk; the shell holds the old
   modules until the disable/enable cycle.
 - **`./scripts/dev-extension.js` stages a fresh copy of `lib/`**, so an edit reaches the
-  next enable under a URL GJS has not cached. How it names the stage is the repository's
-  (a checksum of the files in most; a new copy per enable in Wallpaper FX) and its
-  CLAUDE.md says so. The shipped `extension.js` imports `lib/app.js` once, as an install
+  next enable under a URL GJS has not cached: one per running shell (by its process id),
+  named for a checksum of the files, so an unchanged re-enable reuses it and no shell
+  ever removes another's. The script is the kit's, the same in every repository. The
+  shipped `extension.js` imports `lib/app.js` once, as an install
   should.
 - **GObject type names outlive modules.** A class registered under a fixed name fails the
   second time it is registered ("already registered"); under staging, every enable loads

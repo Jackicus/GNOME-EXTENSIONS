@@ -103,7 +103,8 @@ extension, and that the kit lacks, goes in the report for the kit, not here.
   `sync.sh --check <repo>` is clean.
 - The shared scripts are not edited in the repository: what is the extension's own is
   `./scripts/ext.conf` (every field true: UUID, name, log prefix, app class, `EXT_SHIP`,
-  `EXT_CHECKS`), `./scripts/dev.d/` and `./scripts/nested.d/` (each command documented in
+  `EXT_CHECKS`, and `EXT_TOOLS` naming every tool its scripts use beyond the kit's),
+  `./scripts/dev.d/` and `./scripts/nested.d/` (each command documented in
   the file's header), and the Makefile's targets after `include scripts/kit.mk`. No
   `lib/` class sets a fixed `GTypeName` (a reload would fail to register it). A
   repository still on its own scripts is moved with

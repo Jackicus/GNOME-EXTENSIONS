@@ -20,7 +20,8 @@ differs.
 ## The loop
 
 ```bash
-S=<your scratchpad>                       # shots go there, never into the repository
+S=<your scratchpad>/<repository>          # shots go there, never into the repository; a folder
+                                          # per repository, since sessions and agents share it
 ./scripts/nested.sh start                 # ~2 s; the extension is ACTIVE when it returns
 ./scripts/nested.sh do "say Baseline" "shot $S/before.png"
 # … edit src/ …

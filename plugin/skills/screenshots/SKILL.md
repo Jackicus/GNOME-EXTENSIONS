@@ -18,8 +18,9 @@ Read the repository's drive-extension skill (its "Screenshots" section) and CLAU
 first. They name the stand-ins and the formats; what the repositories use today:
 
 Every repository shoots under `./scripts/nested.sh start --stand-in`: a scratch `HOME`
-holding a copy of the checkout's `src/`, fresh settings, the system's `PATH`, and what the
-repository's `nested_stand_in` hook (in `./scripts/nested.d/`) puts there; commands named
+holding a copy of the checkout's `src/`, fresh settings in GNOME's stock look (none of the
+owner's fonts, theme or accent), the system's `PATH`, and what the repository's
+`nested_stand_in` hook (in `./scripts/nested.d/`) puts there once per start; commands named
 in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session's own.
 
 - **Games and Video Library**: the hook writes the invented library
@@ -29,8 +30,8 @@ in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session
 - **Wallpaper FX**: GNOME's default wallpaper as the base; JPEG patterns at the sizes its
   drive skill gives, `prefs.png` for the preferences.
 - **AI Usage**: stand-in `claude` and `agy`, stand-in logins, and invented figures from
-  `./scripts/stand-in-http.js` staged over `lib/http.js`; its `shots` command drives the
-  whole set.
+  `./scripts/stand-in-http.js` staged over `lib/http.js` (its `nested_stand_in_stage`
+  hook); its `shots` command drives the whole set.
 
 If the repository has no stand-in for what a shot needs, make one (invented data,
 committed beside the others) before shooting; never shoot the real thing and blur it.
@@ -40,7 +41,8 @@ committed beside the others) before shooting; never shoot the real thing and blu
 With `gnome-ext:nested-shell`, `start --stand-in` always: fresh settings, the stock look,
 the default wallpaper, the repository's own size (1600x900 unless its drive skill says otherwise), no other
 extensions. Dark first, then light where the README shows both. Work in progress goes to
-the scratchpad; only the final files go to `docs/screenshots/`, under the names the README
+the repository's own folder in the scratchpad (`<scratchpad>/<repository>/`: sessions and
+agents share the scratchpad, and a generic name gets overwritten); only the final files go to `docs/screenshots/`, under the names the README
 already links (renaming one breaks the links on extensions.gnome.org's copy of the README
 too). Crop the screencast indicator out of every kept shot.
 
@@ -53,9 +55,20 @@ too). Crop the screencast indicator out of every kept shot.
    files. Read every line of text in the shot.
 3. **Shrink and strip**: `oxipng --opt 4 --strip safe docs/screenshots/*.png`; a JPEG is
    written from the PNG with `magick in.png -strip -quality 90 out.jpg`.
-4. **Metadata and bytes**: `grep -c -a -E 'tEXt|iTXt|zTXt|Exif' docs/screenshots/*` prints
-   0 for each, and `grep -l -a -E "/home/|$(id -un)|$(git config user.email)"
-   docs/screenshots/*` prints nothing.
+4. **Metadata and bytes**: after stripping, `grep -c -a -E 'tEXt|iTXt|zTXt|eXIf|Exif'
+   docs/screenshots/*` prints 0 for each, and this prints nothing:
+
+   ```bash
+   pat="/home/$(id -un)/"; e="$(git config user.email)"
+   n="$(getent passwd "$(id -un)" | cut -d: -f5 | cut -d, -f1)"
+   [ -n "$e" ] && pat="$pat|$e"; [ "${#n}" -ge 5 ] && pat="$pat|$n"
+   grep -l -a -E "$pat" docs/screenshots/*
+   ```
+
+   Never grep a short word on its own (the bare user name, a two-letter account name): it
+   matches compressed image bytes by chance, so the check fires on every file and stops
+   meaning anything. Text drawn in the picture is not in its bytes at all: step 2 is
+   where that is caught.
 5. **Alt text and captions**: the README's alt text says what the shot shows, with the
    same stand-in values (a path in the shot is the path in the alt text), and no personal
    detail. If what a shot shows changed, its caption changes with it.

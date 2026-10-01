@@ -43,7 +43,10 @@ one pull request each, through the loop their CLAUDE.md describes.
 
 With more than two extensions, give each one to a subagent with these steps and the kit
 pull request's link; they touch separate repositories, so they run in parallel. Two
-agents never work in the same extension at once.
+agents never work in the same extension at once, and each keeps its scratch files in its
+repository's folder of the scratchpad (`<scratchpad>/<repo>/`). The kit itself is one
+checkout that every session shares: a kit branch is made in a worktree of its own
+(`git worktree add`), never by switching the kit folder's branch.
 
 ## After
 

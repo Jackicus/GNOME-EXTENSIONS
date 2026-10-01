@@ -54,7 +54,7 @@ in parallel subagents only when the owner asks for it.
    (`gh workflow run release.yml -f tag=v<version-name>`). A wrong `version-name` in the
    tagged commit cannot be fixed under that tag: release the next version.
 7. Verify: `gh release view v<version-name>` shows the notes and one
-   `<uuid>.shell-extension.zip`; `gh release download v<version-name> -D <scratch>` and
+   `<uuid>.shell-extension.zip`; `gh release download v<version-name> -D <scratch>/<repository>` and
    `unzip -l` it: `metadata.json` with that version-name, the files `src/` ships, nothing
    else.
 8. Hand over: the release URL, the zip's local path from step 7, the `gnome-ext:ego-review`
