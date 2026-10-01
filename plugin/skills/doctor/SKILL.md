@@ -15,7 +15,9 @@ the report at the end says what each found.
 - Read the kit: its CLAUDE.md, every file in its `.claude/rules/`, and this plugin's
   `nested-shell` skill. The kit is the folder above the repository (or the cache path
   `.claude/kit.sh` prints). What they say is what the repository must **not** repeat.
-- `git status` clean, on `main`, pulled. `gh issue create` an issue: "Adopt the
+- The repository is listed in the kit's `extensions.json` (adding it is a kit pull
+  request), and `scripts/pull.sh <alias>` from the kit leaves it up to date on a clean
+  `main`. `gh issue create` an issue: "Adopt the
   GNOME-EXTENSIONS kit: true and short instructions, make check in CI, protected main",
   and a branch `chore/kit-doctor`.
 - Do not start a nested shell for this unless a claim cannot be checked any other way;

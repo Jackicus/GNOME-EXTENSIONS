@@ -4,7 +4,8 @@
 #   scripts/check.sh
 #
 # - shellcheck over the kit's scripts and the hook each extension gets;
-# - every .json file parses;
+# - every .json file parses, and extensions.json lists each extension once, with a
+#   repository, and every listed directory is one the kit ignores;
 # - every backticked kit path in CLAUDE.md, .claude/rules/, the kit's own skills and the
 #   plugin's skills exists (one starting template/, plugin/, .claude-plugin/,
 #   .claude/rules/, scripts/ or .github/; a .github/ path may be the template's).
@@ -53,6 +54,29 @@ for doc in docs:
 for line in missing:
     print('check:', line, file=sys.stderr)
 sys.exit(1 if missing else 0)
+EOF
+
+python3 - <<'EOF' || fail=1
+import json, re, subprocess, sys
+
+problems = []
+extensions = json.load(open('extensions.json'))['extensions']
+for key in ('name', 'repo', 'alias'):
+    values = [e.get(key) for e in extensions]
+    if None in values or '' in values:
+        problems.append(f'every extension needs its {key}')
+    elif len(set(values)) != len(values):
+        problems.append(f'two extensions share one {key}')
+for e in extensions:
+    if not re.fullmatch(r'[\w.-]+/[\w.-]+', e.get('repo', '')):
+        problems.append(f'{e.get("name")}: repo is not OWNER/NAME')
+    # The extensions are repositories of their own: the kit must ignore each directory.
+    ignored = subprocess.run(['git', 'check-ignore', '-q', '--no-index', e.get('name', '') + '/'])
+    if ignored.returncode != 0:
+        problems.append(f'.gitignore does not ignore {e.get("name")}/')
+for line in problems:
+    print('check: extensions.json:', line, file=sys.stderr)
+sys.exit(1 if problems else 0)
 EOF
 
 if [ $fail -ne 0 ]; then
