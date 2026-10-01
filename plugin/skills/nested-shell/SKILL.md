@@ -12,16 +12,16 @@ by looking at it. This is the generic loop; the repository's
 commands (a player, a virtual pad, demo data) and what must never be pressed. Read both
 before the first `start`. The rules in the kit's `live-session.md` hold throughout.
 
-AI Usage drives its shell differently (`./scripts/dev.sh nested [--window|--keep]` and
-`./scripts/dev.sh shots [--light]`, keyfile settings under a scratch directory); its
-CLAUDE.md says how. Everything below is `./scripts/nested.sh`, which the other extensions
-share in shape (`./scripts/nested.sh help` for this repository's exact list).
+`./scripts/nested.sh` is the kit's, the same in every repository; `./scripts/nested.sh help`
+lists it with this repository's own commands (from `./scripts/nested.d/`). A repository
+without `./scripts/ext.conf` still runs its own older script: its CLAUDE.md says how it
+differs.
 
 ## The loop
 
 ```bash
 S=<your scratchpad>                       # shots go there, never into the repository
-./scripts/nested.sh start --clean         # ~2 s; the extension is ACTIVE when it returns
+./scripts/nested.sh start                 # ~2 s; the extension is ACTIVE when it returns
 ./scripts/nested.sh do "say Baseline" "shot $S/before.png"
 # … edit src/ …
 ./scripts/nested.sh reload
@@ -32,13 +32,14 @@ S=<your scratchpad>                       # shots go there, never into the repos
 Then **Read the PNGs** and say what actually differs. If nothing visibly changed, say so;
 never assume an edit worked.
 
-- **`start`** reuses a running shell. `--clean` (where the repository has it) gives it a
-  settings database of its own; use it unless the task is about sitting beside the user's
-  other extensions, which only a plain `start` loads. `--headless` skips the mirror;
-  `start WxH` sets the monitor (default 1600x900).
-- **`reload`** disables and enables the extension inside the nested shell. It does not
-  recompile the schema or re-read `extension.js` or `metadata.json`: those need
-  `stop` + `start`.
+- **`start`** reuses a running shell. Its settings are its own (only this extension
+  enabled, the user's look copied in), kept between starts; `--clean` resets them.
+  `--headless` skips the mirror; `--monitors N` puts N monitors side by side; `WxH` sets
+  each (default 1600x900); `--stand-in` runs it over stand-in data, for shots that are
+  kept (below).
+- **`reload`** recompiles the schema and disables and enables the extension inside the
+  nested shell (under `--stand-in`, after copying `src/` again). It does not re-read
+  `extension.js` or `metadata.json`: those need `stop` + `start`.
 - **`stop` + `start` at least once before calling a change done.** Only a fresh start runs
   the enable path and the first frame as a login does.
 
@@ -51,10 +52,11 @@ fails, so a whole walkthrough is one tool call.
 |---|---|
 | `say TEXT` | A banner in the nested shell (≤ ~40 characters, no apostrophes: steps are shell-split). One before every step the user should follow. |
 | `click X Y` / `move X Y` | Click or hover at desktop coordinates. |
+| `scroll X Y up\|down [N]` | N wheel notches with the pointer there. |
 | `key KEYSYM` | `Escape`, `Return`, arrows, `F1`–`F12`, one character, or a chord (`Super+Page_Down`). |
 | `wait SECS` | Let something land: ~1 s after the overview opens or closes, ~0.6 s after a pop-up. |
 | `shot [FILE [X Y W H]]` | A screenshot, or only a region: crop to what is being judged. |
-| `window FILE` | The focused window alone (the preferences), where the repository has it. |
+| `window FILE` | The focused window alone (the preferences). |
 | `overview on\|off` | Show or hide the overview; a `shot` or `click` outside `overview on` dismisses it. |
 
 The same steps exist as single commands for a one-off. Also: `status`, `logs [N] [--all]`,
@@ -68,25 +70,23 @@ The same steps exist as single commands for a one-off. Also: `status`, `logs [N]
   inside the nested session. The Extensions app keeps the `prefs.js` it first imported;
   after an edit, kill the nested one (the process whose environment names this
   repository's nested Wayland display) before reopening, never a bare `pkill -f`.
-- **Settings**: under `--clean`, `./scripts/nested.sh run timeout 5 gsettings --schemadir
-  src/schemas set org.gnome.shell.extensions.<name> KEY VALUE` changes its own database at
-  once. Without `--clean`, see the dconf rule in `live-session.md`.
+- **Settings**: `./scripts/nested.sh run timeout 5 gsettings --schemadir src/schemas set
+  org.gnome.shell.extensions.<name> KEY VALUE` changes the nested session's own settings
+  at once, never the user's (`live-session.md`).
 
 ## When it looks wrong
 
 `./scripts/nested.sh logs` first: a JS exception in `enable()` leaves the previous UI up
 and reads as "no change". `logs 200 --all` shows the D-Bus and portal chatter too. Lines
-with the extension's `[Name]` prefix are its own; without `--clean`, other extensions load
-and log alongside.
+with the extension's `[Name]` prefix are its own.
 
 If the mirror will not open (it needs GStreamer's PipeWire plugin), use `--headless` and
 screenshots, and tell the user.
 
 ## Screenshots that are kept
 
-`docs/screenshots/` images are taken under `--clean` (and `--demo` where the repository has
-invented data), never of the user's own collection, accounts or files, at the size and
-format the repository's drive skill names. Read every one before committing it.
+`docs/screenshots/` images are taken under `start --stand-in`, never of the user's own
+collection, accounts or files: the `gnome-ext:screenshots` skill.
 
 ## Finishing
 

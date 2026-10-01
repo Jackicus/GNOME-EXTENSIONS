@@ -14,15 +14,22 @@
 #   template/CONTRIBUTING.md                   copied
 #   template/.claude/kit.sh                    copied, executable
 #   template/eslint.config.mjs                 copied
+#   template/scripts/dev.sh, nested.sh,        copied (the first three executable): the
+#     nested_driver.py, dev-extension.js,      tooling every extension shares, which
+#     kit.mk                                   reads scripts/ext.conf and the
+#                                              repository's scripts/dev.d/ and nested.d/
 #   template/.claude/settings.json             merged into the repository's own: the
 #                                              SessionStart hook added once, the
 #                                              marketplace and plugin set, everything
-#                                              else (the SessionEnd hook) kept
+#                                              else kept; the SessionEnd hook that
+#                                              stops the nested shell added once
 #
-# and its CLAUDE.md is checked for the kit pointer line (template/CLAUDE.pointer.md),
-# which is written by hand. Nothing is committed: each repository lands the result
-# through its own pull request. A repository whose .gitignore ignores any of these files
-# is refused, since the synced copy would never be committed.
+# Two files are written by hand and only checked for: the kit pointer line in CLAUDE.md
+# (template/CLAUDE.pointer.md), and scripts/ext.conf, which the shared scripts read
+# (.claude/skills/rollout/nested-migration.md says what goes in it). Nothing is
+# committed: each repository lands the result through its own pull request. A repository
+# whose .gitignore ignores any of these files is refused, since the synced copy would never
+# be committed.
 #
 # --check changes nothing, lists what differs, and exits 1 if anything does.
 
@@ -74,7 +81,13 @@ copies=(
     CONTRIBUTING.md
     .claude/kit.sh
     eslint.config.mjs
+    scripts/dev.sh
+    scripts/nested.sh
+    scripts/nested_driver.py
+    scripts/dev-extension.js
+    scripts/kit.mk
 )
+executables=(.claude/kit.sh scripts/dev.sh scripts/nested.sh scripts/nested_driver.py)
 pointer=$(cat "$template/CLAUDE.pointer.md")
 status=0
 
@@ -135,10 +148,12 @@ for repo in "${repos[@]}"; do
             fi
         fi
     done
-    if [ -f "$repo/.claude/kit.sh" ] && [ ! -x "$repo/.claude/kit.sh" ]; then
-        changed+=(".claude/kit.sh (mode)")
-    fi
-    [ $check -eq 0 ] && [ -f "$repo/.claude/kit.sh" ] && chmod +x "$repo/.claude/kit.sh"
+    for f in "${executables[@]}"; do
+        if [ -f "$repo/$f" ] && [ ! -x "$repo/$f" ]; then
+            changed+=("$f (mode)")
+            [ $check -eq 0 ] && chmod +x "$repo/$f"
+        fi
+    done
 
     want=$(merged_settings "$repo/.claude/settings.json")
     have=$(cat "$repo/.claude/settings.json" 2>/dev/null || true)
@@ -153,6 +168,10 @@ for repo in "${repos[@]}"; do
     missing_pointer=0
     grep -qF -- "$pointer" "$repo/CLAUDE.md" 2>/dev/null || missing_pointer=1
 
+    if [ ! -f "$repo/scripts/ext.conf" ]; then
+        echo "$name: scripts/ext.conf is missing, and the shared scripts read it: write it by hand (.claude/skills/rollout/nested-migration.md)"
+        [ $check -eq 1 ] && status=1
+    fi
     if [ $missing_pointer -eq 1 ]; then
         echo "$name: CLAUDE.md lacks the kit pointer line (template/CLAUDE.pointer.md): add it by hand"
         [ $check -eq 1 ] && status=1

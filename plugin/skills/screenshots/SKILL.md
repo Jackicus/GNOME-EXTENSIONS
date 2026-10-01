@@ -17,23 +17,28 @@ wallpaper or file of the user's, and nothing fetched from the network.
 Read the repository's drive-extension skill (its "Screenshots" section) and CLAUDE.md
 first. They name the stand-ins and the formats; what the repositories use today:
 
-- **Games and Video Library**: `./scripts/nested.sh start --clean --demo`, the invented
-  library `./scripts/demo_library.py` draws. Full-screen shots as JPEG, windows as PNG.
-- **Media Controls**: `--clean` over the Big Buck Bunny demo clip (`make demo-clip`,
-  credited in the README), played with `./scripts/nested.sh player`.
-- **Wallpaper FX**: `--clean`, whose base is GNOME's default wallpaper; JPEG patterns at
-  the sizes its drive skill gives, `prefs.png` for the preferences.
-- **AI Usage**: `./scripts/dev.sh shots [--light]`, a private user and mount namespace
-  with stand-in CLIs on `/usr/bin`, stand-in logins in a scratch `HOME` and invented
-  figures from `./scripts/stand-in-http.js`.
+Every repository shoots under `./scripts/nested.sh start --stand-in`: a scratch `HOME`
+holding a copy of the checkout's `src/`, fresh settings, the system's `PATH`, and what the
+repository's `nested_stand_in` hook (in `./scripts/nested.d/`) puts there; commands named
+in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session's own.
+
+- **Games and Video Library**: the hook writes the invented library
+  `./scripts/demo_library.py` draws. Full-screen shots as JPEG, windows as PNG.
+- **Media Controls**: the Big Buck Bunny demo clip (`make demo-clip`, credited in the
+  README), played with `./scripts/nested.sh player`.
+- **Wallpaper FX**: GNOME's default wallpaper as the base; JPEG patterns at the sizes its
+  drive skill gives, `prefs.png` for the preferences.
+- **AI Usage**: stand-in `claude` and `agy`, stand-in logins, and invented figures from
+  `./scripts/stand-in-http.js` staged over `lib/http.js`; its `shots` command drives the
+  whole set.
 
 If the repository has no stand-in for what a shot needs, make one (invented data,
 committed beside the others) before shooting; never shoot the real thing and blur it.
 
 ## 2. Shoot
 
-With `gnome-ext:nested-shell`, `--clean` always: the stock look, the default wallpaper,
-the repository's own size (1600x900 unless its drive skill says otherwise), no other
+With `gnome-ext:nested-shell`, `start --stand-in` always: fresh settings, the stock look,
+the default wallpaper, the repository's own size (1600x900 unless its drive skill says otherwise), no other
 extensions. Dark first, then light where the README shows both. Work in progress goes to
 the scratchpad; only the final files go to `docs/screenshots/`, under the names the README
 already links (renaming one breaks the links on extensions.gnome.org's copy of the README

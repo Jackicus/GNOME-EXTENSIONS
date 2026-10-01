@@ -31,7 +31,10 @@ one pull request each, through the loop their CLAUDE.md describes.
    by hand is a finding for the report, not something to keep or drop silently.
 4. Whatever the change needs that `sync.sh` cannot do: a new package in
    `./.github/ci-packages`, a line in the extension's CLAUDE.md that the template now
-   contradicts. Nothing else goes in: a rollout pull request never carries other work.
+   contradicts. An extension without `./scripts/ext.conf` is moving onto the shared
+   scripts for the first time: `nested-migration.md`, beside this skill, says what moves
+   where and how to verify it. Nothing else goes in: a rollout pull request never carries
+   other work.
 5. `make check` in the extension.
 6. Commit (subject says what is now true: "CI caches the npm modules, as the kit's
    template does now"), push, open the pull request with "Fixes #N" and a link to the kit

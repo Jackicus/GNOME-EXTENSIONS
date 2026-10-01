@@ -20,13 +20,19 @@ extension's file is the more specific and wins; fix whichever is wrong.
   in the Extensions app's process: Gtk 4 and libadwaita, never St, Clutter, Meta, Shell
   or `ui/`. A module both sides import imports neither (Gio, GLib and its own pure code
   only). A shell import reached from `prefs.js` fails only when the preferences open.
-- `src/` is exactly what ships: `make pack` (Wallpaper FX: `make zip`) zips it into
-  `dist/<uuid>.shell-extension.zip`, `make install` copies it, and a file added there
-  ships. `make link` installs a directory of links into `src/` whose entry point is
-  `./scripts/dev-extension.js`, which stages `lib/` afresh so `reload` picks up edits.
-- `make` is a thin front door: `./scripts/dev.sh` for the extension (link, install,
-  reload, logs, pack, status) and `./scripts/nested.sh` for the nested shell. New logic
-  goes in those, not in the Makefile.
+- `src/` is exactly what ships: `make pack` zips it into `dist/<uuid>.shell-extension.zip`
+  and `make install` copies it, both as far as `./scripts/ext.conf`'s `EXT_SHIP` says.
+  `make link` installs a directory of links into `src/` whose entry point is
+  `./scripts/dev-extension.js`, which stages `lib/` afresh per edit, under a directory of
+  the running shell's own, so `reload` picks up edits and one shell never deletes
+  another's stage.
+- The tooling is the kit's, the same in every repository (`template/scripts/`, copied by
+  `scripts/sync.sh`): `./scripts/dev.sh` for the extension (link, install, reload, logs,
+  pack, check, status), `./scripts/nested.sh` for the nested shell, and the make targets
+  in `./scripts/kit.mk`, which the Makefile includes. What is particular to an extension
+  is `./scripts/ext.conf` (its UUID, name, log prefix, what ships, its checks) and its own
+  commands and hooks in `./scripts/dev.d/` and `./scripts/nested.d/`; a change to the
+  shared scripts goes to the kit.
 - Settings are a GSettings schema in `src/schemas/`, `org.gnome.shell.extensions.<name>`.
   `glib-compile-schemas --strict` must pass: an install compiles it that way.
 
@@ -45,19 +51,17 @@ The user's desktop is the one they are working in. Everything is tried in a **ne
 shell**: a second, headless GNOME Shell with its own session bus, mirrored live on the
 desktop (`.claude/rules/live-session.md`; the `gnome-ext:nested-shell` skill to drive it).
 Never reload, restart or enable anything in the real session to test a change, never write
-the user's dconf for a test, and never touch another repository's nested shell. A nested
-shell that outlives its command (`./scripts/nested.sh start`) is stopped by the
-repository's SessionEnd hook if the session ends first; stop it yourself when the work is
-done. AI Usage's lives only while its command runs, and it has no such hook.
+the user's dconf for a test, and never touch another repository's nested shell. The nested
+shell keeps settings of its own and is stopped by the repository's SessionEnd hook if the
+session ends first; stop it yourself when the work is done.
 
 ## Style
 
 - `make lint` is ESLint with gjs.guide's configuration (`eslint.config.mjs`, the same in
   every repo: `template/eslint.config.mjs`). No errors, and no new warnings.
 - 4-space indents, `const` and `let`, `console.*` for logging behind the extension's own
-  `[Name]` prefix, which `make logs` filters on. The shipped code logs failures only.
-  `make logs` takes no time: a Makefile rule drops arguments (`make logs '5 min ago'`
-  makes a second goal), so a window goes to `./scripts/dev.sh logs '5 min ago'`.
+  `[Name]` prefix, which `make logs` filters on (`make logs SINCE='5 min ago'` for a
+  window). The shipped code logs failures only.
 - Comments describe the code as it is: no phase numbers, review IDs, plans or history.
   History is git's.
 - GObject type names, CSS classes, settings paths, cache and runtime directories are
@@ -105,9 +109,10 @@ extension moves here, in a kit pull request, and leaves the extensions' files.
   repeat it.
 - `.claude/commands/` (`/logs`, `/reload`, `/status`, `/preview`, …): per repo, since each
   names its own log line, its own healthy state and its own data.
-- `.claude/settings.json`: the SessionEnd hook that stops the nested shell (where the
-  nested shell outlives its command), plus the kit's SessionStart hook and plugin, merged
+- `.claude/settings.json`: the kit's SessionStart and SessionEnd hooks and plugin, merged
   in by `scripts/sync.sh`.
+- `./scripts/ext.conf`, `./scripts/dev.d/`, `./scripts/nested.d/` and the Makefile's own
+  targets after `include scripts/kit.mk`.
 
 ## Skills from the kit
 

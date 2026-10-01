@@ -95,11 +95,19 @@ extension, and that the kit lacks, goes in the report for the kit, not here.
   prints nothing (a repository that ignored all of `.claude/` would never commit them;
   ignore `.claude/worktrees/` or `.claude/settings.local.json` instead). `sync.sh` refuses
   such a repository.
-- Run the kit's `scripts/sync.sh <this repository>`. It copies
-  `.github/workflows/ci.yml`, `.github/workflows/release.yml`,
-  `.github/pull_request_template.md`, `.claude/kit.sh` and
-  `eslint.config.mjs`, and merges the kit's hook and plugin into `.claude/settings.json`,
-  keeping the SessionEnd hook. Review its diff; then `sync.sh --check <repo>` is clean.
+- Run the kit's `scripts/sync.sh <this repository>`. It copies the workflows, the issue
+  forms and pull request template, `CONTRIBUTING.md`, `.claude/kit.sh`,
+  `eslint.config.mjs` and the shared scripts (`./scripts/dev.sh`, `./scripts/nested.sh`,
+  `./scripts/nested_driver.py`, `./scripts/dev-extension.js`, `./scripts/kit.mk`), and
+  merges the kit's hooks and plugin into `.claude/settings.json`. Review its diff; then
+  `sync.sh --check <repo>` is clean.
+- The shared scripts are not edited in the repository: what is the extension's own is
+  `./scripts/ext.conf` (every field true: UUID, name, log prefix, app class, `EXT_SHIP`,
+  `EXT_CHECKS`), `./scripts/dev.d/` and `./scripts/nested.d/` (each command documented in
+  the file's header), and the Makefile's targets after `include scripts/kit.mk`. No
+  `lib/` class sets a fixed `GTypeName` (a reload would fail to register it). A
+  repository still on its own scripts is moved with
+  `.claude/skills/rollout/nested-migration.md`.
 - `npm ci` works (`package-lock.json` committed and current).
 
 ## 6. Land it

@@ -3,7 +3,8 @@
 #
 #   scripts/check.sh
 #
-# - shellcheck over the kit's scripts and the hook each extension gets;
+# - shellcheck over the kit's scripts and the hook and scripts each extension gets, and
+#   the template's Python compiled;
 # - every .json file parses, every workflow (the kit's and the template's) is valid YAML
 #   when PyYAML is there to say so, and extensions.json lists each extension once, with a
 #   repository, and every listed directory is one the kit ignores;
@@ -27,7 +28,10 @@ else
     echo "check: shellcheck is not installed (pacman -S shellcheck, or uv for uvx)" >&2
     exit 1
 fi
-"${shellcheck_cmd[@]}" scripts/*.sh template/.claude/kit.sh || fail=1
+"${shellcheck_cmd[@]}" scripts/*.sh template/.claude/kit.sh template/scripts/*.sh || fail=1
+for f in template/scripts/*.py; do
+    PYTHONPYCACHEPREFIX="$(mktemp -d)" python3 -m py_compile "$f" || { echo "check: $f does not compile" >&2; fail=1; }
+done
 
 # The workflows: the kit's own and the ones every extension gets.
 yaml_python=(python3)

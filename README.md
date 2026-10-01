@@ -19,7 +19,9 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── template/                      files every extension carries (CI, the release workflow,
 │                                  the kit hook, ESLint,
 │                                  the pull request template, the issue forms,
-│                                  CONTRIBUTING.md, settings to merge)
+│                                  CONTRIBUTING.md, settings to merge, and scripts/:
+│                                  dev.sh, nested.sh, nested_driver.py,
+│                                  dev-extension.js, kit.mk)
 ├── scripts/pull.sh                the kit and the extensions up to date (clones what is missing)
 ├── scripts/setup.sh               once per machine: install the plugin
 ├── scripts/sync.sh                copy template/ into the extensions
@@ -119,14 +121,21 @@ a pull request, a green `kit check`, a squash merge. Then:
 ## A new extension
 
 Add it to `extensions.json` (a kit pull request), create its repository inside this
-folder, then `scripts/sync.sh <name>`, add the pointer
-line to the top of its `CLAUDE.md`, give it a `make check`, and run the
+folder, then `scripts/sync.sh <name>`, write its `scripts/ext.conf` and a Makefile that
+includes `scripts/kit.mk`, add the pointer line to the top of its `CLAUDE.md`, and run the
 `gnome-ext:doctor` skill in it: that walks the rest (CI, settings, protection).
 
-## Not done yet
+## The development scripts
 
-The extensions' development scripts began as one and have drifted apart: five copies of
-`./scripts/nested.sh`, `./scripts/nested_driver.py`, `./scripts/dev-extension.js` and
-`./scripts/dev.sh`, each with its own fixes. Converging them into `template/`, with what
-really differs per extension moved into a small configuration file, is the next step,
-after each extension's instructions have been audited.
+Every extension runs the same `./scripts/dev.sh` (link, install, reload, logs, pack,
+check, status), `./scripts/nested.sh` (the nested shell), `./scripts/nested_driver.py`,
+`./scripts/dev-extension.js` and the make targets in `./scripts/kit.mk`, copied from
+`template/scripts/` by `scripts/sync.sh`; a fix to them is made once, here. What differs
+is the extension's own: `scripts/ext.conf` (its UUID, name, log prefix, what ships, its
+checks) and the commands and hooks in `scripts/dev.d/` and `scripts/nested.d/` (a VLC
+player, a virtual pad, a demo library, stand-in logins). Moving an extension onto them for
+the first time is `.claude/skills/rollout/nested-migration.md`.
+
+The nested shell's settings are its own (the keyfile backend in a directory of its own
+under `~/.local/state/gnome-extensions-nested/`), so it never writes the user's dconf;
+`start --stand-in` runs it over stand-in data, for the screenshots that are published.
