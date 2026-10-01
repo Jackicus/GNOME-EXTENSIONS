@@ -28,6 +28,15 @@ extension's file is the more specific and wins; fix whichever is wrong.
 - Settings are a GSettings schema in `src/schemas/`, `org.gnome.shell.extensions.<name>`.
   `glib-compile-schemas --strict` must pass: an install compiles it that way.
 
+## Two machines
+
+The user works on two, and a session may be on either: the main desktop (NVIDIA GTX 1080,
+GNOME Shell 50.5) and an Intel HP all-in-one (Mesa, GNOME Shell 50.4). A shell version,
+GPU, driver or measurement in a doc names the machine it was taken on; a claim of support
+is machine-independent ("GNOME Shell 50"). An audit never "corrects" one machine's
+numbers to the other's. Which one this is: `gnome-shell --version`, `lspci | grep -i vga`
+or `glxinfo -B | grep renderer` (NVIDIA or Mesa Intel).
+
 ## Never the user's session
 
 The user's desktop is the one they are working in. Everything is tried in a **nested
