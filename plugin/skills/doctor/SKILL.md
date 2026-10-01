@@ -96,7 +96,8 @@ extension, and that the kit lacks, goes in the report for the kit, not here.
   ignore `.claude/worktrees/` or `.claude/settings.local.json` instead). `sync.sh` refuses
   such a repository.
 - Run the kit's `scripts/sync.sh <this repository>`. It copies
-  `.github/workflows/ci.yml`, `.github/pull_request_template.md`, `.claude/kit.sh` and
+  `.github/workflows/ci.yml`, `.github/workflows/release.yml`,
+  `.github/pull_request_template.md`, `.claude/kit.sh` and
   `eslint.config.mjs`, and merges the kit's hook and plugin into `.claude/settings.json`,
   keeping the SessionEnd hook. Review its diff; then `sync.sh --check <repo>` is clean.
 - `npm ci` works (`package-lock.json` committed and current).
@@ -124,8 +125,14 @@ EOF
 gh api repos/$R/branches/main/protection --jq '.required_status_checks.contexts, .enforce_admins.enabled'
 ```
 
+Release tags are permanent: the kit's `scripts/protect-tags.sh <repo>` creates (or
+updates) the "Release tags" ruleset, which refuses moving or deleting a `v*` tag. Check it
+with `gh api repos/$R/rulesets --jq '.[].name'`. `release.yml` itself must have arrived
+with the sync: `scripts/releases.sh <repo>` shows `release run` as `never run` or a
+result, not `no workflow`.
+
 ## 8. Report
 
 Under 300 words: the PR and its CI, `wc -l` of CLAUDE.md before and after, the rules files
 made, claims found wrong and fixed, claims left for the user to decide, shared knowledge
-the kit should take (quote the line), and the protection result.
+the kit should take (quote the line), and the protection result (branch and release tags).

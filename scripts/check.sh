@@ -4,7 +4,8 @@
 #   scripts/check.sh
 #
 # - shellcheck over the kit's scripts and the hook each extension gets;
-# - every .json file parses, and extensions.json lists each extension once, with a
+# - every .json file parses, every workflow (the kit's and the template's) is valid YAML
+#   when PyYAML is there to say so, and extensions.json lists each extension once, with a
 #   repository, and every listed directory is one the kit ignores;
 # - every backticked kit path in CLAUDE.md, .claude/rules/, the kit's own skills and the
 #   plugin's skills exists (one starting template/, plugin/, .claude-plugin/,
@@ -27,6 +28,18 @@ else
     exit 1
 fi
 "${shellcheck_cmd[@]}" scripts/*.sh template/.claude/kit.sh || fail=1
+
+# The workflows: the kit's own and the ones every extension gets.
+yaml_python=(python3)
+python3 -c 'import yaml' 2>/dev/null || { command -v uvx >/dev/null && yaml_python=(uvx --quiet --with pyyaml python3); }
+if "${yaml_python[@]}" -c 'import yaml' 2>/dev/null; then
+    for f in .github/workflows/*.yml template/.github/workflows/*.yml; do
+        "${yaml_python[@]}" -c 'import sys, yaml; d = yaml.safe_load(open(sys.argv[1])); assert d.get("jobs"), "no jobs"' "$f" \
+            || { echo "check: $f is not a valid workflow" >&2; fail=1; }
+    done
+else
+    echo "check: PyYAML is not installed; the workflows' YAML was not checked" >&2
+fi
 
 while IFS= read -r -d '' f; do
     python3 -m json.tool "$f" >/dev/null || { echo "check: $f is not valid JSON" >&2; fail=1; }
