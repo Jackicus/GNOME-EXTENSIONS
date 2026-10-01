@@ -254,7 +254,7 @@ wait_state() {
 }
 
 touch_activity() {
-    [[ -d "$RUN_DIR" ]] && touch "$ACTIVITY_FILE" 2>/dev/null || true
+    if [[ -d "$RUN_DIR" ]]; then touch "$ACTIVITY_FILE" 2>/dev/null || true; fi
 }
 
 # The nested mutter's own X11 display (Xwayland, started on demand), found from
@@ -378,13 +378,13 @@ cmd_start() {
         if ! kill -0 "$pid" 2>/dev/null; then
             warn "Nested shell exited during startup. Last output:"
             filtered_log 20 >&2
-            cmd_stop >/dev/null || true
+            stop_session "" >/dev/null || true
             return 1
         fi
         if (( waited >= 200 )); then
             warn "Nested shell did not answer on D-Bus within 20s. Last output:"
             filtered_log 20 >&2
-            cmd_stop >/dev/null || true
+            stop_session "" >/dev/null || true
             return 1
         fi
         sleep 0.1
@@ -506,8 +506,11 @@ sweep_session() {
     [[ -z "${pids// }" ]] || { warn "Could not stop: $pids"; return 1; }
 }
 
-cmd_stop() {
-    [[ "${1:-}" == "--idle" ]] && info "Idle for $(cat "$IDLE_FILE" 2>/dev/null)s; stopping the nested shell."
+cmd_stop() { stop_session "${1:-}"; }
+
+# stop_session [--idle]: everything 'stop' does; --idle when the watchdog calls it.
+stop_session() {
+    [[ "$1" == "--idle" ]] && info "Idle for $(cat "$IDLE_FILE" 2>/dev/null)s; stopping the nested shell."
     # The watchdog first, so it does not race this stop, unless this stop IS the
     # watchdog, which exec'd into it.
     if pid_alive "$WATCH_PID_FILE"; then
@@ -583,7 +586,7 @@ cmd_session_end() {
     local ending
     ending="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("session_id",""))' 2>/dev/null || true)"
     [[ -n "$ending" && "$ending" == "$(cat "$OWNER_FILE")" ]] || return 0
-    cmd_stop >/dev/null 2>&1
+    stop_session "" >/dev/null 2>&1
 }
 
 cmd_do() {
