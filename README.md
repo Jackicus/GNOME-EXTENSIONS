@@ -131,8 +131,8 @@ description` does it all (`.claude/skills/new-extension/`). By hand:
 
 1. `scripts/new-extension.sh "Clipboard Peek" clipboard-peek "One sentence."` makes
    `GNOME-Clipboard-Peek/` beside the kit from `template/skeleton/`: a working extension
-   (a top-bar icon behind one setting, its preferences and schema, `lib/app.js` and
-   `lib/gtype.js` as every extension has them, `scripts/ext.conf`, a Makefile on
+   (a top-bar icon behind one setting, its preferences and schema, `lib/app.js` as
+   every extension has it, `scripts/ext.conf`, a Makefile on
    `scripts/kit.mk`, CLAUDE.md with the pointer line, README, LICENSE), synced, with
    `package-lock.json`, in a fresh git repository with nothing committed.
 2. `make check`, then see it ACTIVE in `./scripts/nested.sh start --clean --headless`.

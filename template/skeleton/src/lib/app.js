@@ -9,11 +9,10 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-import {typeName} from './gtype.js';
-
-const Indicator = GObject.registerClass({
-    GTypeName: typeName('Indicator'),
-}, class Indicator extends PanelMenu.Button {
+// No GTypeName: GJS names the class after this module's path, which differs per
+// development stage, so a reload after an edit registers it afresh.
+const @CLASS@Indicator = GObject.registerClass(
+class @CLASS@Indicator extends PanelMenu.Button {
     _init(extension) {
         super._init(0.5, extension.metadata.name);
         this.add_child(new St.Icon({
@@ -45,7 +44,7 @@ export class @CLASS@App {
     _sync() {
         const show = this._settings.get_boolean('show-indicator');
         if (show && !this._indicator) {
-            this._indicator = new Indicator(this._extension);
+            this._indicator = new @CLASS@Indicator(this._extension);
             Main.panel.addToStatusArea(this._extension.uuid, this._indicator);
         } else if (!show && this._indicator) {
             this._indicator.destroy();

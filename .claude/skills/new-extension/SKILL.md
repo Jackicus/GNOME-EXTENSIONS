@@ -17,8 +17,8 @@ to the end without stopping.
    `GNOME-<Name>/` beside the kit from `template/skeleton/`: an extension that puts an icon
    in the top bar behind one setting (`show-indicator`), its preferences (an
    `Adw.SwitchRow` bound to the key), schema, `lib/app.js` (`<Class>App`, everything made
-   in `enable()` and undone in `disable()`), `lib/gtype.js` (GObject names prefixed and
-   per load), `./scripts/ext.conf`, a Makefile on `./scripts/kit.mk`, CLAUDE.md with the kit
+   in `enable()` and undone in `disable()`; its GObject class is `<Class>Indicator`, with
+   no `GTypeName`), `./scripts/ext.conf`, a Makefile on `./scripts/kit.mk`, CLAUDE.md with the kit
    pointer, README, LICENSE (GPL-2.0-or-later); then `scripts/sync.sh` over it and
    `package-lock.json`. Nothing is committed.
 2. **Check it.** In the new directory: `make check` passes and `./scripts/dev.sh pack`

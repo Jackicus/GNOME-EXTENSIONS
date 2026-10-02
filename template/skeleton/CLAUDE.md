@@ -11,7 +11,6 @@ src/extension.js        entry point: imports lib/app.js
 src/prefs.js            preferences (own process: Gtk and Adw only)
 src/schemas/            org.gnome.shell.extensions.@SLUG@
 src/lib/app.js          @CLASS@App: everything enable() puts into the shell
-src/lib/gtype.js        typeName(): every GObject class's name, prefixed and per load
 scripts/ext.conf        what the kit's scripts need to know about this extension
 ```
 

@@ -16,9 +16,12 @@
   ever removes another's. The script is the kit's, the same in every repository. The
   shipped `extension.js` imports `lib/app.js` once, as an install
   should.
-- **GObject type names outlive modules.** A class registered under a fixed name fails the
-  second time it is registered ("already registered"); under staging, every enable loads
-  `lib/` afresh. Name per-load classes apart, or register once.
+- **No `GTypeName`.** GObject type names outlive modules, and Shell 50 has GJS name an
+  unnamed class after its module's path: `Gjs_lib_bar_MediaControlsBar` installed,
+  `Gjs_lib-<stage>_bar_MediaControlsBar` under staging, so every load after an edit
+  registers apart by itself. A hand-set `GTypeName` (or a per-load suffix helper) is what
+  fails with "already registered", and is not needed. The JS class name carries the
+  extension's prefix (`MediaControlsBar`, not `Bar`).
 - **The schema is compiled, not read.** After editing the `.gschema.xml`,
   `glib-compile-schemas src/schemas`, then a nested `stop` + `start`.
 - **Never `gnome-extensions install --force` over the link**: its recursive delete follows
