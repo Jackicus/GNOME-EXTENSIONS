@@ -19,12 +19,14 @@ first. They name the stand-ins and the formats; what the repositories use today:
 
 Every repository shoots under `./scripts/nested.sh start --stand-in`: a scratch `HOME`
 holding a copy of the checkout's `src/`, fresh settings in GNOME's stock look (none of the
-owner's fonts, theme or accent), the system's `PATH`, and what the repository's
-`nested_stand_in` hook (in `./scripts/nested.d/`) puts there once per start; commands named
-in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session's own,
-and variables named in `EXT_STAND_IN_UNSET` are not in its environment. A variable the
-extension reads that could point it at real data (a provider's config directory) belongs
-there.
+owner's fonts, theme or accent; the dash shows the system schema's favourites), the
+system's `PATH`, `XDG_DATA_DIRS` and `XDG_CONFIG_DIRS` (none of the owner's Flatpak apps in
+the dash, the app grid or search), and what the repository's `nested_stand_in` hook (in
+`./scripts/nested.d/`) puts there once per start; commands named in `EXT_STAND_IN_BINS`
+are stand-ins on `/usr/bin` in a namespace of the session's own, and neither variables
+named in `EXT_STAND_IN_UNSET` nor any whose value is a path in the real home are in its
+environment. A variable the extension reads that could point it at real data elsewhere
+(a provider's config directory outside the home, a key) belongs in `EXT_STAND_IN_UNSET`.
 
 - **Library**: the hook writes the invented library
   `./scripts/demo_library.py` draws. Full-screen shots as JPEG, windows as PNG.
