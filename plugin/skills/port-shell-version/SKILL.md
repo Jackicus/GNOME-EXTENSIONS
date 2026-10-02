@@ -7,7 +7,7 @@ argument-hint: "[the new version, e.g. 51; repository default the current one]"
 Port to: $ARGUMENTS
 
 A version is claimed in `shell-version` only once the extension has **run** on it.
-Reading the sources says what to fix; it does not earn the claim. Video Library's #8
+Reading the sources says what to fix; it does not earn the claim. Library's #8
 (GNOME 51: `Clutter.get_default_backend()` and `navigate_from_event` are gone) is the
 shape of a typical finding.
 

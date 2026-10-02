@@ -22,8 +22,8 @@ In this order. A section with nothing true to say is left out, never padded.
 3. **What it does**: a short list, one bold lead-in each, five or six at most. Features a
    person would choose it for, not implementation.
 4. **The extension's own sections**: what this extension needs explained before it is
-   installed or used (AI Usage's providers, Games Library's artwork sources, Video
-   Library's where-it-opens table, Wallpaper FX's patterns). Each earns its place.
+   installed or used (AI Usage's providers, Library's artwork sources and
+   where-it-opens table, Wallpaper FX's patterns). Each earns its place.
 5. **Requirements**: "GNOME Shell 50" as `shell-version` lists it (never a machine's point
    release), and every runtime need outside GNOME (a player, a CLI signed in, Python 3
    for a scanner). The build needs for a source install go in Install.
