@@ -23,7 +23,7 @@ owner's fonts, theme or accent), the system's `PATH`, and what the repository's
 `nested_stand_in` hook (in `./scripts/nested.d/`) puts there once per start; commands named
 in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session's own.
 
-- **Games Library and Library**: the hook writes the invented library
+- **Library**: the hook writes the invented library
   `./scripts/demo_library.py` draws. Full-screen shots as JPEG, windows as PNG.
 - **Media Controls**: the Big Buck Bunny demo clip (`make demo-clip`, credited in the
   README), played with `./scripts/nested.sh player`.
