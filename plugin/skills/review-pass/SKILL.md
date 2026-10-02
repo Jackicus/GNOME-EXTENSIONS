@@ -25,7 +25,8 @@ none. A PR number: `gh pr checkout N` first.)
    - **shared-shell hygiene**: an unprefixed GObject type name, CSS class, effect name or
      settings path; a monkey-patch that does not chain, or that is removed while another
      extension's wrapper sits over it;
-   - **reload traps**: a fixed GObject type name registered from a staged module, a path
+   - **reload traps**: a `GTypeName` set on a class (GJS names it after its module's
+     path, which a reload changes; a set one fails "already registered"), a path
      derived from `import.meta.url` or hard-coded to the repository;
    - **St CSS**: web CSS St ignores, px font sizes or px lengths other than a hairline or a
      shadow, hard-coded hues, a CSS length scaled by `scale_factor` or an allocation that

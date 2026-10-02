@@ -87,9 +87,9 @@ memory, and keep their comments.
 
 ## Also in the same pull request
 
-- `lib/`: no class with a fixed `GTypeName` (it would fail to register again after an
-  edit and a reload); an implicit name, or a per-load one like Media Controls'
-  `src/lib/gtype.js`.
+- `lib/`: no class sets a `GTypeName` (a set one fails to register again after an edit
+  and a reload; GJS's own name follows the stage's path), and no per-load name helper;
+  the JS class name carries the prefix (Media Controls #48, Wallpaper FX #39).
 - Every doc that names an old command or flag: CLAUDE.md, `.claude/rules/`, the
   drive-extension skill, `.claude/commands/`, README's development section.
   `make logs '…'` is `make logs SINCE='…'`; a plain nested `start` no longer shares the

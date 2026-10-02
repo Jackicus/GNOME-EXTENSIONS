@@ -106,7 +106,9 @@ extension, and that the kit lacks, goes in the report for the kit, not here.
   `EXT_CHECKS`, and `EXT_TOOLS` naming every tool its scripts use beyond the kit's),
   `./scripts/dev.d/` and `./scripts/nested.d/` (each command documented in
   the file's header), and the Makefile's targets after `include scripts/kit.mk`. No
-  `lib/` class sets a fixed `GTypeName` (a reload would fail to register it). A
+  `lib/` class sets a `GTypeName` or takes one from a per-load helper (a reload would fail
+  to register a set one; GJS names it after its module's path), and each JS class name
+  carries the extension's prefix. A
   repository still on its own scripts is moved with
   `.claude/skills/rollout/nested-migration.md`.
 - `./scripts/ext.conf` sets `EXT_BUDGET_LINES`, and CLAUDE.md states it with a one-line
