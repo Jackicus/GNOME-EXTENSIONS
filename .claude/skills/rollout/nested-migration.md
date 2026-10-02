@@ -26,6 +26,9 @@ steps; this is step 4 for that rollout.
   NESTED_STRAYS=("$REPO_DIR/scripts/fakepad.py")
   # Stand-in commands overlaid on /usr/bin under 'start --stand-in'.
   EXT_STAND_IN_BINS=()
+  # Variables removed from the environment under 'start --stand-in', so none points the
+  # extension at real data (a provider's config directory, say).
+  EXT_STAND_IN_UNSET=()
   # Development tools this extension's scripts use beyond the kit's, CHECK|PACKAGE|WHAT FOR
   # (CHECK is cmd:NAME or py:MODULE); the kit's 'scripts/setup.sh --tools' lists the missing.
   EXT_TOOLS=("cmd:vlc|vlc|player" "cmd:ffmpeg|ffmpeg|the test video" "py:evdev|python-evdev|fakepad.py")
@@ -76,7 +79,8 @@ memory, and keep their comments.
   now. Fixes GNOME-Wallpaper-FX#9: each shell stages under a directory of its own.
 - **AI Usage**: `EXT_SHIP=("lib:*.js" "icons:*.svg")`, `EXT_CHECKS=(imports assets
   parsers)` (each a `dev.d` command, as before; the old `schemas` command is the shared
-  `schema`), `EXT_STAND_IN_BINS=(claude agy)`, `providers` in `dev.d` (real logins and the
+  `schema`), `EXT_STAND_IN_BINS=(claude codex agy)`,
+  `EXT_STAND_IN_UNSET=(CODEX_HOME)`, `providers` in `dev.d` (real logins and the
   network: the user's to run). Its nested shell becomes the shared long-lived one
   (`./scripts/nested.sh start|stop`; `dev.sh nested [--window|--keep]` goes). `nested.d`:
   `nested_stand_in` writes the stand-in logins and `nested_stand_in_stage` copies
