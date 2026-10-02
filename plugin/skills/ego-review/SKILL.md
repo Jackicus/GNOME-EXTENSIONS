@@ -8,7 +8,7 @@ Repository: $ARGUMENTS (nothing given: the current one)
 
 The checklist comes from the guidelines as published, not from memory. It was built from
 https://gjs.guide/extensions/review-guidelines/review-guidelines.html and
-https://gjs.guide/extensions/review-guidelines/best-practices.html, read on 2026-10-01.
+https://gjs.guide/extensions/review-guidelines/best-practices.html, read on 2026-10-02.
 **Fetch both again first** (WebFetch) and add to or strike from the list below whatever
 has changed; if anything did, fix this skill in a kit pull request. Read the repository's
 `docs/publishing.md` too: it records how the extension already answers the review.
@@ -38,6 +38,11 @@ Work on the shipped tree: what `make pack` (Wallpaper FX: `make zip`) puts in
   `/org/gnome/shell/extensions/`, the XML in the zip as `<schema-id>.gschema.xml`; no
   `gschemas.compiled` (the shell compiles on install since 44).
 - **Readable code**: no minified or obfuscated JavaScript.
+- **No `GObject.run_dispose()`** unless it is necessary, with a comment saying why.
+- **Other extensions**: modifying, reloading or interacting with another extension is
+  discouraged and reviewed case by case. Anything that reaches one (Dash to Panel's
+  panel, a dock) is opt-in through a setting, off by default, touches nothing while
+  off, and is explained in the repository's docs and the upload notes.
 - **Subprocesses**: no shipped binaries or libraries; spawned processes exit cleanly;
   scripts in GJS unless unavoidable; no privileged subprocess other than through `pkexec`
   on a file the user cannot write.
@@ -65,6 +70,8 @@ Work on the shipped tree: what `make pack` (Wallpaper FX: `make zip`) puts in
   step that can throw for a reason outside the extension (a private API, a monkey-patch
   put back, another extension's object) is guarded (`.claude/rules/gjs-st.md`).
 - No optional chaining or type checks on what the targeted versions guarantee.
+- A `destroy()` removes its sources first, then disconnects, drops its children's
+  references, and calls `super.destroy()` last.
 - A source's removal sits next to its creation; `enable()` and `disable()` sit together;
   each class cleans up what it made; the entry point stays small.
 - `St.Icon` in the shell and `Gtk.Image` in the preferences, never emoji as icons.
