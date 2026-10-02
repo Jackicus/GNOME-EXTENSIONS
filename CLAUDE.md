@@ -66,6 +66,9 @@ sessions and agents running side by side share the scratchpad, and overwrite gen
   window). The shipped code logs failures only.
 - Comments describe the code as it is: no phase numbers, review IDs, plans or history.
   History is git's.
+- Only the code that is needed, and comments only for the why
+  (`.claude/rules/simplicity.md`): extensions.gnome.org rejects code that reads as
+  generated. `make check` ends with `./scripts/dev.sh size` against the repo's budget.
 - GObject type names, CSS classes, settings paths, cache and runtime directories are
   global to the shell: each extension prefixes its own (`.claude/rules/gjs-st.md`).
 - Private shell API (an underscore field, an unexported class) is listed where the repo
@@ -125,7 +128,8 @@ once per machine by `scripts/setup.sh`: `gnome-ext:fix-bug`, `gnome-ext:review-p
 (the extensions.gnome.org review, before any upload), `gnome-ext:port-shell-version`,
 `gnome-ext:hig-polish`, `gnome-ext:readme` (the README skeleton and the GitHub page),
 `gnome-ext:pull` (the kit and the extensions up to date, and why one was left alone),
-`gnome-ext:releases` (what each has released, and what is waiting).
+`gnome-ext:releases` (what each has released, and what is waiting),
+`gnome-ext:simplify-pass` (code down to the simplicity rule, behaviour proven unchanged).
 A release is a pushed `v*` tag: each extension's `Release` workflow builds the zip and the
 GitHub release, whose notes are the changelog. Release tags are protected and never move.
 Outside this workspace (a cloud session, a fresh clone) the plugin is not there;

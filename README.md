@@ -9,14 +9,15 @@ cannot drift between five copies.
 GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── CLAUDE.md                      rules for every extension session (loaded automatically)
 ├── extensions.json                the extensions: directory, GitHub repository, alias
-├── .claude/rules/                 the same, by topic: live-session.md, gjs-st.md
+├── .claude/rules/                 the same, by topic: live-session.md, gjs-st.md,
+│                                  simplicity.md
 ├── .claude/skills/rollout/        the kit's own skill: land a template change everywhere
 ├── .claude/skills/new-extension/  the kit's own skill: start a new extension
 ├── .claude-plugin/marketplace.json
 ├── plugin/                        the gnome-ext plugin: fix-bug, review-pass,
 │                                  nested-shell, release, doctor, screenshots,
 │                                  ego-review, port-shell-version, hig-polish, readme,
-│                                  pull, releases
+│                                  pull, releases, simplify-pass
 ├── template/                      files every extension carries (CI, the release workflow,
 │                                  the kit hook, ESLint,
 │                                  the pull request template, the issue forms,

@@ -1,7 +1,7 @@
 {
   "name": "gnome-ext",
-  "version": "0.4.1",
-  "description": "Skills shared by the GNOME Shell extensions beside the GNOME-EXTENSIONS kit: fix-bug, review-pass, nested-shell, release, doctor, screenshots, ego-review, port-shell-version, hig-polish, readme, pull, releases",
+  "version": "0.5.0",
+  "description": "Skills shared by the GNOME Shell extensions beside the GNOME-EXTENSIONS kit: fix-bug, review-pass, nested-shell, release, doctor, screenshots, ego-review, port-shell-version, hig-polish, readme, pull, releases, simplify-pass",
   "author": {
     "name": "Jackicus"
   },
