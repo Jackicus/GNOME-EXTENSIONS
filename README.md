@@ -33,8 +33,7 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── scripts/new-extension.sh       scaffold a new extension from template/skeleton/
 ├── scripts/check.sh               the kit's own check (CI runs it)
 ├── GNOME-AI-Usage/                an extension, its own repository (ignored here)
-├── GNOME-Games-Library/           …
-├── GNOME-Library/
+├── GNOME-Library/                …
 ├── GNOME-Media-Controls/
 └── GNOME-Wallpaper-FX/
 ```

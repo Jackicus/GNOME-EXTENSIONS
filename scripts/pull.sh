@@ -4,7 +4,7 @@
 #   scripts/pull.sh [--quiet] [--no-kit] [--skip NAME] [NAME|ALIAS...]
 #
 # The kit first, then every extension (or those named, by directory name or alias:
-# ai-usage, games, library, media, wallpaper), in parallel:
+# ai-usage, library, media, wallpaper), in parallel:
 #
 #   missing                      cloned beside the kit
 #   on a clean main              fetched and fast-forwarded
