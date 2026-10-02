@@ -34,8 +34,8 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── scripts/check.sh               the kit's own check (CI runs it)
 ├── GNOME-AI-Usage/                an extension, its own repository (ignored here)
 ├── GNOME-Games-Library/           …
+├── GNOME-Library/
 ├── GNOME-Media-Controls/
-├── GNOME-Video-Library/
 └── GNOME-Wallpaper-FX/
 ```
 
@@ -86,7 +86,7 @@ with one `pacman` command; it installs nothing. `scripts/setup.sh --tools` runs 
 ## Keeping up to date
 
 `scripts/pull.sh` pulls the kit, then every extension in parallel (or those named, by
-directory or alias: `scripts/pull.sh games video`). A missing one is cloned; one on a
+directory or alias: `scripts/pull.sh library media`). A missing one is cloned; one on a
 clean `main` is fast-forwarded; anything else (another branch, uncommitted changes,
 unpushed or diverged commits on `main`) is fetched and left alone, with the reason in its
 summary line. A local branch whose remote is gone, because its pull request was merged,

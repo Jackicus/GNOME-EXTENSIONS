@@ -2,8 +2,8 @@
   "extensions": [
     {"name": "GNOME-AI-Usage", "repo": "Jackicus/GNOME-AI-Usage", "alias": "ai-usage"},
     {"name": "GNOME-Games-Library", "repo": "Jackicus/GNOME-Games-Library", "alias": "games"},
+    {"name": "GNOME-Library", "repo": "Jackicus/GNOME-Library", "alias": "library"},
     {"name": "GNOME-Media-Controls", "repo": "Jackicus/GNOME-Media-Controls", "alias": "media"},
-    {"name": "GNOME-Video-Library", "repo": "Jackicus/GNOME-Video-Library", "alias": "video"},
     {"name": "GNOME-Wallpaper-FX", "repo": "Jackicus/GNOME-Wallpaper-FX", "alias": "wallpaper"}
   ]
 }
