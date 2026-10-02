@@ -21,7 +21,10 @@ Every repository shoots under `./scripts/nested.sh start --stand-in`: a scratch 
 holding a copy of the checkout's `src/`, fresh settings in GNOME's stock look (none of the
 owner's fonts, theme or accent), the system's `PATH`, and what the repository's
 `nested_stand_in` hook (in `./scripts/nested.d/`) puts there once per start; commands named
-in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session's own.
+in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session's own,
+and variables named in `EXT_STAND_IN_UNSET` are not in its environment. A variable the
+extension reads that could point it at real data (a provider's config directory) belongs
+there.
 
 - **Library**: the hook writes the invented library
   `./scripts/demo_library.py` draws. Full-screen shots as JPEG, windows as PNG.
@@ -29,7 +32,7 @@ in `EXT_STAND_IN_BINS` are stand-ins on `/usr/bin` in a namespace of the session
   README), played with `./scripts/nested.sh player`.
 - **Wallpaper FX**: GNOME's default wallpaper as the base; JPEG patterns at the sizes its
   drive skill gives, `prefs.png` for the preferences.
-- **AI Usage**: stand-in `claude` and `agy`, stand-in logins, and invented figures from
+- **AI Usage**: stand-in `claude`, `codex` and `agy`, stand-in logins, and invented figures from
   `./scripts/stand-in-http.js` staged over `lib/http.js` (its `nested_stand_in_stage`
   hook); its `shots` command drives the whole set.
 

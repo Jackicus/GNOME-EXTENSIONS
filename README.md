@@ -154,4 +154,6 @@ the first time is `.claude/skills/rollout/nested-migration.md`.
 
 The nested shell's settings are its own (the keyfile backend in a directory of its own
 under `~/.local/state/gnome-extensions-nested/`), so it never writes the user's dconf;
-`start --stand-in` runs it over stand-in data, for the screenshots that are published.
+`start --stand-in` runs it over stand-in data, for the screenshots that are published:
+a scratch `HOME`, the system's `PATH`, and without the variables `scripts/ext.conf`'s
+`EXT_STAND_IN_UNSET` names (any that would point the extension at real data).
