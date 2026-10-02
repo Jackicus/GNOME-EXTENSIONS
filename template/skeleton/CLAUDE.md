@@ -21,7 +21,8 @@ scripts/ext.conf        what the kit's scripts need to know about this extension
 
 ## Verifying
 
-`make check` (ESLint and the schema; CI runs it). Anything visible is seen in the
+`make check` (ESLint, the schema, and `size` against the budget of 1500 lines in
+`scripts/ext.conf`, which suits one indicator and its preferences; CI runs it). Anything visible is seen in the
 nested shell (`gnome-ext:nested-shell`, then this repository's `drive-extension`
 skill).
 

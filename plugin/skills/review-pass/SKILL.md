@@ -38,7 +38,12 @@ none. A PR number: `gh pr checkout N` first.)
    - **real data**: a library title, account name, user path or real screenshot in a
      fixture, a doc, a test or `docs/screenshots/`;
    - **docs**: a line in CLAUDE.md, `.claude/rules/`, a skill or `docs/` the change made
-     untrue; comments that narrate history instead of describing the code.
+     untrue; comments that narrate history instead of describing the code;
+   - **simplicity** (`.claude/rules/simplicity.md`): comments that narrate, restate or
+     argue a design; code for a shell version outside `shell-version`; `try`, `?.` or a
+     null check that nothing outside can make fail; a helper used once, an option nobody
+     sets, dead code; speed-ups with no measurement behind them; `./scripts/dev.sh size`
+     over the repository's budget after the change.
 3. Run `make check`. For anything visible, look at it in the nested shell
    (`gnome-ext:nested-shell`).
 4. Fix what is clear-cut, one logical fix per commit, each with `make check` green, on the

@@ -49,6 +49,9 @@ Work on the shipped tree: what `make pack` (Wallpaper FX: `make zip`) puts in
   not exist, leftover prompts and other generated-output tells. Look for them as a
   reviewer would: defensive checks on things that cannot be missing, comments that
   narrate the next line, helpers used once, `try`/`catch` around calls that cannot throw.
+  The kit's `.claude/rules/simplicity.md` is the standard to report against, and
+  `./scripts/dev.sh size` the numbers to quote; a finding here is fixed with
+  `gnome-ext:simplify-pass`, not in this audit.
 - **Legal**: GPL-2.0-or-later compatible; code from other extensions credited; no brand
   names, logos or artwork without the owner's permission (a provider's or service's
   logo used as an icon counts); nothing against the GNOME Code of Conduct; no political
