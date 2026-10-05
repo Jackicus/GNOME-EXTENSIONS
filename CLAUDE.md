@@ -2,7 +2,7 @@
 
 This folder is the **kit**: shared rules, skills and templates for the GNOME Shell extensions
 checked out beside it, one git repository each (`GNOME-AI-Usage`, `GNOME-Library-Menu`,
-`GNOME-Media-Controls`, `GNOME-Wallpaper-FX`). The kit is a repository
+`GNOME-Media-Controls`, `GNOME-Song-Recognizer`, `GNOME-Wallpaper-FX`). The kit is a repository
 of its own (Jackicus/GNOME-EXTENSIONS) that ignores them and lists them in `extensions.json`;
 `scripts/pull.sh` clones and fast-forwards them, and every session starts with the kit and
 its own repository pulled (`.claude/kit.sh`). A session started in an extension
