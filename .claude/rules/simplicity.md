@@ -42,8 +42,8 @@ here is written to pass that reading. `gnome-ext:simplify-pass` brings existing 
 
 ## Size
 
-Each extension sets `EXT_BUDGET_LINES` in `./scripts/ext.conf`: the lines of JavaScript under
-`src/` it should not grow past, stated with a one-line reason in its CLAUDE.md.
-`./scripts/dev.sh size` (run by `make check`) prints the lines, the comment share and the
-`try` count against it, and warns when over. A warning is a prompt to simplify, not to raise
-the budget; raising it is the owner's decision.
+There is no line cap: an extension grows by what its features need. What keeps it small is
+the rules above, applied to every change, and `gnome-ext:simplify-pass` before a release.
+`./scripts/dev.sh size` (run by `make check`) prints the lines of JavaScript under `src/`,
+the comment share and the `try` count, to compare before and after a change; it warns only
+when comments reach 10%.
