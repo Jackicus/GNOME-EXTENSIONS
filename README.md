@@ -35,7 +35,7 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── GNOME-AI-Usage/                an extension, its own repository (ignored here)
 ├── GNOME-Library-Menu/           …
 ├── GNOME-Media-Controls/
-├── GNOME-Song-Recognizer/
+├── GNOME-SongRec-Button/
 └── GNOME-Wallpaper-FX/
 ```
 
