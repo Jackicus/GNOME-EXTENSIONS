@@ -1,13 +1,15 @@
 ---
 name: simplify-pass
-description: Bring a GNOME Shell extension's code down to the kit's simplicity standard - comments cut to the why, no code for unclaimed shell versions, no defensive try or checks, no speculative abstraction - area by area, each change proven to keep behaviour and speed, landed as small pull requests. Use when asked to simplify an extension, make it read as hand-written, get it ready for extensions.gnome.org review, or when dev.sh size warns.
+description: Bring a GNOME Shell extension's code down to the kit's simplicity standard - comments cut to the why, no code for unclaimed shell versions, no defensive try or checks, no speculative abstraction - area by area, each change proven to keep behaviour and speed, landed as small pull requests. Use when asked to simplify an extension, make it read as hand-written, get it ready for extensions.gnome.org review, or when dev.sh size warns about comments.
 argument-hint: "[area or file; nothing for a map of the whole repository]"
 ---
 
 Target: $ARGUMENTS (nothing: the whole repository, starting with a map)
 
 The standard is the kit's `.claude/rules/simplicity.md`. Simplifying never changes what the
-extension does: same features, same settings, same look, same speed.
+extension does: same features, same settings, same look, same speed. There is no line count
+to reach: a line goes because the rule says it is not needed, and the numbers from
+`./scripts/dev.sh size` only show what the pass removed.
 
 ## 0. The map
 
@@ -59,10 +61,6 @@ Issue, branch `simplify/<area>`, pull request "Fixes #N". The body states, befor
 after: `src/` lines, comment share and `try` count (`./scripts/dev.sh size`), the area's
 own lines, and how behaviour was checked (shots compared, logs, measurement). CI green,
 `gh pr merge --squash --delete-branch`, pull main.
-
-When the repository is under its budget, lower `EXT_BUDGET_LINES` in `./scripts/ext.conf`
-towards where it now is (with headroom of about a tenth) and say why in CLAUDE.md, in the
-last pull request.
 
 ## 5. Report
 

@@ -111,9 +111,8 @@ extension, and that the kit lacks, goes in the report for the kit, not here.
   carries the extension's prefix. A
   repository still on its own scripts is moved with
   `.claude/skills/rollout/nested-migration.md`.
-- `./scripts/ext.conf` sets `EXT_BUDGET_LINES`, and CLAUDE.md states it with a one-line
-  reason (`.claude/rules/simplicity.md`). `make check` ends with `./scripts/dev.sh size`;
-  report its line, and if it warns, say so (the fix is `gnome-ext:simplify-pass`).
+- `make check` ends with `./scripts/dev.sh size`; report its line, and if it warns, say so
+  (the fix is `gnome-ext:simplify-pass`).
 - `npm ci` works (`package-lock.json` committed and current).
 
 ## 6. Land it

@@ -69,7 +69,8 @@ sessions and agents running side by side share the scratchpad, and overwrite gen
   History is git's.
 - Only the code that is needed, and comments only for the why
   (`.claude/rules/simplicity.md`): extensions.gnome.org rejects code that reads as
-  generated. `make check` ends with `./scripts/dev.sh size` against the repo's budget.
+  generated. `make check` ends with `./scripts/dev.sh size`: the lines, comment share and
+  `try` count of `src/`.
 - GObject type names, CSS classes, settings paths, cache and runtime directories are
   global to the shell: each extension prefixes its own (`.claude/rules/gjs-st.md`).
 - Private shell API (an underscore field, an unexported class) is listed where the repo

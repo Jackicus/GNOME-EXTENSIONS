@@ -43,8 +43,8 @@ none. A PR number: `gh pr checkout N` first.)
    - **simplicity** (`.claude/rules/simplicity.md`): comments that narrate, restate or
      argue a design; code for a shell version outside `shell-version`; `try`, `?.` or a
      null check that nothing outside can make fail; a helper used once, an option nobody
-     sets, dead code; speed-ups with no measurement behind them; `./scripts/dev.sh size`
-     over the repository's budget after the change.
+     sets, dead code; speed-ups with no measurement behind them; lines the change adds
+     that its feature does not need.
 3. Run `make check`. For anything visible, look at it in the nested shell
    (`gnome-ext:nested-shell`).
 4. Fix what is clear-cut, one logical fix per commit, each with `make check` green, on the
