@@ -1,6 +1,7 @@
 {
   "extensions": [
     {"name": "GNOME-AI-Usage", "repo": "Jackicus/GNOME-AI-Usage", "alias": "ai-usage"},
+    {"name": "GNOME-GitHub-Bar", "repo": "Jackicus/GNOME-GitHub-Bar", "alias": "github"},
     {"name": "GNOME-Library-Menu", "repo": "Jackicus/GNOME-Library-Menu", "alias": "library"},
     {"name": "GNOME-Media-Controls", "repo": "Jackicus/GNOME-Media-Controls", "alias": "media"},
     {"name": "GNOME-SongRec-Button", "repo": "Jackicus/GNOME-SongRec-Button", "alias": "song"},
