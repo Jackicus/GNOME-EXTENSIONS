@@ -77,6 +77,12 @@
   added the item calls `itemActivated`, which closes the top menu, after every
   `activate` emission. An item that must leave it open overrides `activate()` and does
   not emit, as the shell's switch item does for Space.
+- **A menu section that scrolls** is a `PopupMenuSection` whose `actor` is an
+  `St.ScrollView` around its `box`, with `actor._delegate` set to the section, as
+  `PopupSubMenu` does: the menu finds its items through `_delegate`, and without it the
+  section is never destroyed with the menu and its items lose keyboard navigation. Focus
+  moved below the fold scrolls only through `ensureActorVisibleInScrollView`
+  (`misc/animationUtils.js`). The `_delegate` is private API, listed as such.
 - **"Is the app grid up?" is `Main.overview.dash.showAppsButton.checked`**, never
   `appDisplay.visible`: the shell holds the app display visible for the whole slide down
   to the window picker and does not update it once the transition is dropped. The
@@ -88,6 +94,10 @@
   restyles the widget and every child under it, on every enter and leave. Only a widget
   that paints from `:hover` tracks it, and no rule keys a descendant off a parent's
   `:hover`.
+- **`Gio._promisify` guesses the finish function** from the async one's name; where the
+  two differ it must be named (`replace_contents_bytes_async` finishes with
+  `replace_contents_finish`). A wrong guess throws at import, and the extension fails to
+  load.
 - **Two writes at once on a GIO stream fail** ("Stream has outstanding operation"): queue
   them, one `write_bytes_async` after the last finishes.
 - **A dconf database name is a D-Bus object-path element**: letters, digits and
