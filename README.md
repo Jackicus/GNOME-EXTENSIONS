@@ -37,7 +37,8 @@ GNOME-EXTENSIONS/                  this repository: Jackicus/GNOME-EXTENSIONS
 ├── GNOME-Library-Menu/
 ├── GNOME-Media-Controls/
 ├── GNOME-SongRec-Button/
-└── GNOME-Wallpaper-FX/
+├── GNOME-Wallpaper-FX/
+└── GNOME-Workspace-Titles/
 ```
 
 ## How a session gets the kit
