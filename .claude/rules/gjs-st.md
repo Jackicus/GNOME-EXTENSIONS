@@ -8,6 +8,9 @@
   `metadata.json` needs a logout, or a nested `stop` + `start`.
 - **A new UUID needs a logout**: the shell scans for unknown UUIDs only at startup.
   "Doesn't exist" from `gnome-extensions info` means exactly that; no reload fixes it.
+- **The link is made of `src/`'s top-level entries as they were**: `reload` and a nested
+  `start` make it again, so an entry added since (a stylesheet, an `icons/` folder) is
+  there; a real session that has not reloaded since needs `make link`.
 - **`make reload` is not optional.** The link puts edits on disk; the shell holds the old
   modules until the disable/enable cycle.
 - **`./scripts/dev-extension.js` stages a fresh copy of `lib/`**, so an edit reaches the

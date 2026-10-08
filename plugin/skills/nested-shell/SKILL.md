@@ -43,6 +43,11 @@ never assume an edit worked.
   `extension.js` or `metadata.json`: those need `stop` + `start`.
 - **`stop` + `start` at least once before calling a change done.** Only a fresh start runs
   the enable path and the first frame as a login does.
+- **It stops itself** after 10 minutes with no `nested.sh` command (`NESTED_IDLE=<seconds>`
+  at `start`, `0` = never), a backstop, not the plan.
+- **It runs the link's entry point**, `./scripts/dev-extension.js`. To try the shipped
+  `src/extension.js` (which logs nothing on success), point the installed `extension.js`
+  link at it for one `start`, then point it back.
 
 ## One call per interaction: `do`
 
@@ -83,6 +88,11 @@ with the extension's `[Name]` prefix are its own.
 
 If the mirror will not open (it needs GStreamer's PipeWire plugin), use `--headless` and
 screenshots, and tell the user.
+
+**Headless without the mirror never paints** but for a screenshot: with nothing consuming
+frames the compositor does not draw, so a CPU or GPU reading under `--headless` measures
+nothing. Measure with the mirror on; it adds a constant screencast cost, so compare
+readings with each other, not with zero.
 
 ## Screenshots that are kept
 
