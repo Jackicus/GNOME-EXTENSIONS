@@ -62,8 +62,8 @@ In this order. A section with nothing true to say is left out, never padded.
 - **Nothing personal**: no home paths, usernames, accounts, tokens or real usage figures,
   in text or in images. Shots come from `gnome-ext:screenshots` with invented data.
 - Every image has alt text that says what it shows; shots live in `docs/screenshots/`.
-- Support claims are machine-independent ("GNOME Shell 50"); a measurement names its
-  machine (the kit's "Two machines").
+- Support is claimed per major version ("GNOME Shell 50"); a performance measurement
+  names its machine (the kit's "Two machines").
 - A badge only if it carries information the text does not; at most one row.
 
 ## The GitHub page

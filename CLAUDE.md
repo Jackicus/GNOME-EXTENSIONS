@@ -39,11 +39,11 @@ extension's file is the more specific and wins; fix whichever is wrong.
 ## Two machines
 
 The user works on two, and a session may be on either: the main desktop (NVIDIA GTX 1080)
-and an Intel HP all-in-one (Mesa). Both run GNOME Shell 50 and both upgrade, so no doc
-records either one's point release: check `gnome-shell --version`. A shell version,
-GPU, driver or measurement in a doc names the machine it was taken on; a claim of support
-is machine-independent ("GNOME Shell 50"). An audit never "corrects" one machine's
-numbers to the other's. Which one this is: `gnome-shell --version`, `lspci | grep -i vga`
+and an Intel HP all-in-one (Mesa). Both run GNOME Shell 50. Support is claimed per major
+version ("GNOME Shell 50"), for every machine; a point release a doc mentions is fine
+and is not policed. A performance measurement (frame times, CPU, GPU) says which machine
+it was taken on, and an audit never "corrects" one machine's numbers to the other's.
+Which one this is: `gnome-shell --version`, `lspci | grep -i vga`
 or `glxinfo -B | grep renderer` (NVIDIA or Mesa Intel).
 
 ## Never the user's session
