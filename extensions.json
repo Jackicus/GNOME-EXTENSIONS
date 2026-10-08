@@ -5,6 +5,7 @@
     {"name": "GNOME-Library-Menu", "repo": "Jackicus/GNOME-Library-Menu", "alias": "library"},
     {"name": "GNOME-Media-Controls", "repo": "Jackicus/GNOME-Media-Controls", "alias": "media"},
     {"name": "GNOME-SongRec-Button", "repo": "Jackicus/GNOME-SongRec-Button", "alias": "song"},
-    {"name": "GNOME-Wallpaper-FX", "repo": "Jackicus/GNOME-Wallpaper-FX", "alias": "wallpaper"}
+    {"name": "GNOME-Wallpaper-FX", "repo": "Jackicus/GNOME-Wallpaper-FX", "alias": "wallpaper"},
+    {"name": "GNOME-Workspace-Titles", "repo": "Jackicus/GNOME-Workspace-Titles", "alias": "workspaces"}
   ]
 }
