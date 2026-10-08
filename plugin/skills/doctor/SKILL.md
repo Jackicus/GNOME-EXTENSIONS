@@ -34,9 +34,9 @@ Read the repository's CLAUDE.md, `.claude/skills/*/SKILL.md`, `.claude/commands/
 - every settings key named exists in `src/schemas/*.gschema.xml`, with the default said;
 - every function, class, constant and module named exists where it is said to be;
 - version claims match `src/metadata.json` (`shell-version`, `version-name`, `uuid`);
-- a shell version, GPU, driver or measurement names the machine it was taken on (the
-  kit's "Two machines"); one that differs from this machine is not wrong for that, and
-  is never changed to this machine's;
+- support is claimed per major version; a performance measurement says which machine
+  it was taken on (the kit's "Two machines"), and one that differs from this machine's
+  is not wrong for that and is never changed to this machine's;
 - every private shell API reach in `src/` (an underscore member of a shell object, an
   unexported class reached through a prototype) is listed where the repository lists them.
 
