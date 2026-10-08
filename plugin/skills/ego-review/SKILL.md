@@ -9,7 +9,7 @@ Repository: $ARGUMENTS (nothing given: the current one)
 The checklist comes from the guidelines as published, not from memory. It was built from
 https://gjs.guide/extensions/review-guidelines/review-guidelines.html and
 https://gjs.guide/extensions/review-guidelines/best-practices.html, last compared line
-by line on 2026-10-02.
+by line on 2026-10-02 and again on 2026-10-08.
 **Fetch both again first** (WebFetch) and add to or strike from the list below whatever
 has changed; if anything did, fix this skill in a kit pull request. Read the repository's
 `docs/publishing.md` too: it records how the extension already answers the review.
@@ -36,10 +36,12 @@ Work on the shipped tree: what `make pack` (Wallpaper FX: `make zip`) puts in
   reaches (`make check`'s imports walk where the repository has one).
 - **`metadata.json`**: `uuid` is `id@namespace` (letters, digits, `.`, `_`, `-`; never
   gnome.org); `shell-version` only stable releases the extension has run on, at most one
-  development release, nothing future; `url` the repository; `name` its own (a fork's
-  distinct from the original); no `version` set by hand, no `session-modes` if it is only
-  `user`, `donations` only with valid keys and gone if unused, no unused keys;
-  `settings-schema` present and used through `this.getSettings()` with no argument.
+  development release, nothing future; `url` the GitHub or GitLab repository where
+  issues are reported; `name` its own (a fork's distinct from the original);
+  `description` of a reasonable length; no `version` set by hand; `session-modes` only
+  `user` and `unlock-dialog`, and absent if it is only `user`; `donations` only with valid keys and gone if unused, no unused keys;
+  `settings-schema` present and used through `this.getSettings()` with no argument; the
+  schema id is not repeated in another file or kept as a global constant.
 - **Schemas**: id under `org.gnome.shell.extensions`, path under
   `/org/gnome/shell/extensions/`, the XML in the zip as `<schema-id>.gschema.xml`; no
   `gschemas.compiled` (the shell compiles on install since 44).
@@ -84,7 +86,8 @@ Work on the shipped tree: what `make pack` (Wallpaper FX: `make zip`) puts in
 - A `destroy()` removes its sources first, then disconnects, drops its children's
   references, and calls `super.destroy()` last.
 - A source's removal sits next to its creation; `enable()` and `disable()` sit together;
-  each class cleans up what it made; the entry point stays small.
+  each class cleans up what it made, its own Soup session and cancellable included; the
+  entry point stays small.
 - `St.Icon` in the shell and `Gtk.Image` in the preferences, never emoji as icons; a
   progress shown with `BarLevel` or an `St.Bin`, never an ASCII bar (`█░░`).
 - No line over 200 characters; a linter (ESLint) passes; the preferences follow the
