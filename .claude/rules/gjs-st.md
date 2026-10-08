@@ -34,10 +34,11 @@
   / `this.dir`.
 - **`gjs -m -c '…'` fails for any input on gjs 1.88**: `-m` takes the `-c` text for a
   file name. A one-off module check is a script file run with `gjs -m`.
-- **GObject subclasses follow their parent's constructor style.** `PanelMenu.Button` (and
-  the shell classes still on `_init`) are subclassed with `_init(…)` and
-  `super._init(…)`; `St.BoxLayout` and the other St/Clutter classes with
-  `constructor(…)` and `super(…)`.
+- **GObject subclasses use `constructor(…)` and `super(…)`**, a shell class still on
+  `_init` included: GObject's constructor calls `_init` with what `super()` passed, so
+  `ModalDialog.ModalDialog` takes `super({styleClass: …})`. Only a parent whose `_init`
+  takes several arguments keeps `_init(…)` and `super._init(a, b, c)`
+  (`PanelMenu.Button`); the lint rejects an `_init` that passes `super._init` one.
 
 ## Living in the compositor
 
