@@ -58,7 +58,7 @@ for e in json.load(open(sys.argv[1]))["extensions"]:
 
 if [ ${#repos[@]} -eq 0 ]; then
     while read -r name _; do
-        if [ -d "$kit/$name/.git" ]; then
+        if [ -e "$kit/$name/.git" ]; then
             repos+=("$kit/$name")
         else
             echo "$name: not checked out beside the kit (scripts/pull.sh $name clones it)"
@@ -120,7 +120,7 @@ EOF
 
 for repo in "${repos[@]}"; do
     [ -d "$repo" ] || repo=$kit/$repo
-    if [ ! -d "$repo/.git" ]; then
+    if [ ! -e "$repo/.git" ]; then
         echo "sync.sh: $repo is not a git repository" >&2
         status=1
         continue
